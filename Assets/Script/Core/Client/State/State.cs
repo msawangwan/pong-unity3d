@@ -44,7 +44,7 @@ public abstract class State {
     }
 
     public StateContext<Game> OnExitState () {
-        StateContext<Game> newContext = OnExitState ();
+        StateContext<Game> newContext = ExitState ();
         if (newContext != null) {
             DoneExit = newContext.IsComplete;
         } else {
