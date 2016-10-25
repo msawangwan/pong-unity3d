@@ -7,49 +7,51 @@ public abstract class State {
     public bool DoneUpdate { get; private set; }
     public bool DoneExit { get; private set; }
 
-    public State (StateContext<Game> context) {
+    private System.Action<string> log;
+
+    public State (StateContext<Game> context, bool doneEnter, bool doneUpdate, bool doneExit) {
+        log = msg => Debug.LogFormat("current state is in: {0}", msg);
         Context = context;
+
+        DoneEnter = doneEnter;
+        DoneUpdate = doneUpdate;
+        DoneExit = doneExit;
     }
 
-    protected virtual StateContext<Game> UpdateState () {
-        return null;
+    public static State StateEmptyIteration () {
+        return new StateBlank (new StateContext<Game> (null, true), true, true, true);
     }
 
-    protected virtual StateContext<Game> EnterState () {
-        return null; 
+    protected virtual State EnterState () {
+        return State.StateEmptyIteration();
     }
 
-    protected virtual StateContext<Game> ExitState () {
-        return null; 
+    protected virtual State UpdateState () {
+        return State.StateEmptyIteration();
     }
 
-    public StateContext<Game> OnEnterState () {
-        StateContext<Game> newContext = EnterState ();
-        if (newContext != null) {
-            DoneEnter = newContext.IsComplete;
-        } else {
-            DoneEnter = true;
-        }
-        return newContext;
+    protected virtual State ExitState () {
+        return State.StateEmptyIteration();
     }
 
-    public StateContext<Game> OnUpdateState () {
-        StateContext<Game> newContext = UpdateState ();
-        if (newContext != null) {
-            DoneUpdate = newContext.IsComplete;
-        } else {
-            DoneUpdate = true;
-        }
-        return newContext;
+    public State OnEnterState () {
+        State newState = EnterState ();
+        DoneEnter = newState.Context.IsComplete;
+        log(DoneEnter.ToString());
+        return newState;
     }
 
-    public StateContext<Game> OnExitState () {
-        StateContext<Game> newContext = ExitState ();
-        if (newContext != null) {
-            DoneExit = newContext.IsComplete;
-        } else {
-            DoneExit = true;
-        }
-        return newContext;
+    public State OnUpdateState () {
+        State newState = UpdateState ();
+        DoneUpdate = newState.Context.IsComplete;
+        log(DoneUpdate.ToString());
+        return newState;
+    }
+
+    public State OnExitState () {
+        State newState = ExitState ();
+        DoneExit = newState.Context.IsComplete;
+        log(DoneExit.ToString());
+        return newState;
     }
 }

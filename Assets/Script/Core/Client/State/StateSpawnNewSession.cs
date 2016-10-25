@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
 public class StateSpawnNewSession : State {
-    private readonly Game newGame;
-
     public StateSpawnNewSession (StateContext<Game> context) : base (context) { }
 
-    protected override StateContext<Game> UpdateState () {
-        return new StateContext<Game> (
+    protected override State UpdateState () {
+        StateContext<Game> newGameContext = new StateContext<Game>(
             new Game(),
             true
         );
+
+        return new StateGameSetup (newGameContext);
     }
 }

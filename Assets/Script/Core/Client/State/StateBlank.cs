@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 
-public class StateBlank {
-    // public StateBlank (Game context) : base (context) {}
-
-    // public override IState<Game> UpdateState () {
-    //     return null;
-    // }
+public class StateBlank : State {
+    public StateBlank (StateContext<Game> context) : base (context) {
+        Context.IsComplete = true;
+    }
 }

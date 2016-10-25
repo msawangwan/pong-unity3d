@@ -63,7 +63,6 @@ public class GameController : MonoBehaviour {
         }
 
         if (state == -50) {
-            // game = new Game (new Player (Player.PlayerID.P1), new Player (Player.PlayerID.P2));
             game = new Game ();
             state = -25;
             return;
