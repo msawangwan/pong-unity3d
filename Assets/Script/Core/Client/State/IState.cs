@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
-public class IState : MonoBehaviour {
-
+public interface IState {
+    StateContext<Game> OnEnterState  ();
+    StateContext<Game> UpdateState ();
+    StateContext<Game> OnExitState   ();
 }

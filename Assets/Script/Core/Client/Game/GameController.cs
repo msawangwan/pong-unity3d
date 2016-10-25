@@ -55,7 +55,7 @@ public class GameController : MonoBehaviour {
     }
 
 
-    private void Update () {
+    private void Update_deprecate () {
         DebugToConsole (OutputDebugToConsole);
 
         if (state == -100) { // main menu

@@ -50,7 +50,7 @@ public class Player {
         roundsWon = wins;
     }
 
-    public static Player NewFrom (Player p) {
+    public static Player NewCopyFrom (Player p) {
         return new Player (p.PID, p.PointsScored, p.RoundsWon);
     }
 

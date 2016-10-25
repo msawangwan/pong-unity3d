@@ -18,7 +18,7 @@ public class GameStateCheckRoundsWon : GameState {
 		foreach (Player p in GameWithUpdatedState.Players) {
             ++currentIndex;
             if (p.RoundsWon >= roundsRequired) {
-                winner.Current = Player.NewFrom (p);
+                winner.Current = Player.NewCopyFrom (p);
                 gameWinnerIndex = currentIndex;
                 break;
             }

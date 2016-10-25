@@ -44,22 +44,22 @@ public class Game  {
     }
 
     public Game (Player[] pAll, bool useOldScore = true) {
-        Player player1 = Player.NewFrom (pAll[0]);
-        Player player2 = Player.NewFrom (pAll[1]);
+        Player player1 = Player.NewCopyFrom (pAll[0]);
+        Player player2 = Player.NewCopyFrom (pAll[1]);
 
         players = MapPlayer (player1, player2);
     }
 
     public Game (Player p1, Player p2, bool useOldScore = true) {
-        Player player1 = Player.NewFrom (p1);
-        Player player2 = Player.NewFrom (p2);
+        Player player1 = Player.NewCopyFrom (p1);
+        Player player2 = Player.NewCopyFrom (p2);
 
         players = MapPlayer (player1, player2);
     }
 
     public Game (Player p1, Player p2, Winner winner, bool gameWon = false) {
-        Player player1 = Player.NewFrom (p1);
-        Player player2 = Player.NewFrom (p2);
+        Player player1 = Player.NewCopyFrom (p1);
+        Player player2 = Player.NewCopyFrom (p2);
 
         if (gameWon == false) {
             this.winnerRound = winner;
@@ -68,6 +68,10 @@ public class Game  {
         }
 
         players = MapPlayer (player1, player2);
+    }
+
+    public static Game CopyOf (Game game) {
+        return new Game (game.PlayerOne, game.PlayerTwo);
     }
 
     public static Player.PlayerID TryDetermineScoringPlayer (Func<int> onScore) {
