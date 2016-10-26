@@ -1,20 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StateGameSetup : State {
-    public StateGameSetup (StateContext<Game> context) : base (context) {}
+namespace mStateFramework {
+    public class StateGameSetup : State<Game> {
+        private readonly Game game;        
 
-    protected override State UpdateState () {
-        Player[] players = new Player[2];
-        int i = -1;
-        foreach (Player p in Context.Context.Players) {
-            i++;
-            players[i] = Player.NewCopyFrom(p);
-            players[i].AssignedPaddle.EnableOnlyIfInactive ();
-            Debug.Log("PPPSDA");
+        protected override State<Game>.Stage SetStage () {
+            return State<Game>.Stage.Enter;
         }
 
-        Game game = new Game(players);
-        return null;
+        public StateGameSetup (Game currentContext) : base (currentContext){
+            this.game = Game.CopyOf(currentContext);
+        }
+
+        public override State<Game> Enter () {
+            foreach (Player p in game.Players) {
+                p.AssignedPaddle.EnableOnlyIfInactive ();
+            }
+
+            return new StateStartRound();
+        }
     }
 }

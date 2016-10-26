@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
+using mExtensions.Common;
 
-public class StateSpawnNewSession : State {
-    public StateSpawnNewSession (StateContext<Game> context) : base (context) { }
+namespace mStateFramework {
+    public class StateSpawnNewSession : State<Game> {
+        public StateSpawnNewSession (Game currentContext) : base (currentContext) {}
+        
+        protected override State<Game>.Stage SetStage () {
+            return State<Game>.Stage.Enter;
+        }
 
-    protected override State UpdateState () {
-        StateContext<Game> newGameContext = new StateContext<Game>(
-            new Game(),
-            true
-        );
-
-        return new StateGameSetup (newGameContext);
+        public override State<Game> Enter () {
+            log("spawned new session");
+            return new StateGameSetup (new Game());
+        }
     }
 }

@@ -1,57 +1,62 @@
 ﻿using UnityEngine;
+using mExtensions.Enum;
 
-public abstract class State {
-    public readonly StateContext<Game> Context;
+namespace mStateFramework {
+    public abstract class State<T> {
+        public class Context {
+            public readonly T Current;
 
-    public bool DoneEnter { get; private set; }
-    public bool DoneUpdate { get; private set; }
-    public bool DoneExit { get; private set; }
+            public Context(T current) {
+                Current = current;
+            }
+        }
 
-    private System.Action<string> log;
+        public enum Stage : int {
+            None = 0,
+            Enter,
+            Update,
+            Exit
+        }
 
-    public State (StateContext<Game> context, bool doneEnter, bool doneUpdate, bool doneExit) {
-        log = msg => Debug.LogFormat("current state is in: {0}", msg);
-        Context = context;
+        public readonly State<T>.Context StateContext;
 
-        DoneEnter = doneEnter;
-        DoneUpdate = doneUpdate;
-        DoneExit = doneExit;
-    }
+        public State<T>.Stage CurrentStage { get; private set; }
+        public State<T>.Stage NextStage { get; private set; }
 
-    public static State StateEmptyIteration () {
-        return new StateBlank (new StateContext<Game> (null, true), true, true, true);
-    }
+        protected System.Action<string> log;
 
-    protected virtual State EnterState () {
-        return State.StateEmptyIteration();
-    }
+        public State (T currentContext) {
+            StateContext = new State<T>.Context (currentContext);
+        }
 
-    protected virtual State UpdateState () {
-        return State.StateEmptyIteration();
-    }
+        public State () {
+            log = msg => Debug.LogFormat (
+                "[STATE][INFO][{0}]: {1}", 
+                this.GetType().Name, 
+                msg
+            );
 
-    protected virtual State ExitState () {
-        return State.StateEmptyIteration();
-    }
+            CurrentStage = SetStage ();
 
-    public State OnEnterState () {
-        State newState = EnterState ();
-        DoneEnter = newState.Context.IsComplete;
-        log(DoneEnter.ToString());
-        return newState;
-    }
+            log ("constructor, set stage as - " + CurrentStage.AsString());
+        }
 
-    public State OnUpdateState () {
-        State newState = UpdateState ();
-        DoneUpdate = newState.Context.IsComplete;
-        log(DoneUpdate.ToString());
-        return newState;
-    }
+        protected abstract State<T>.Stage SetStage ();
 
-    public State OnExitState () {
-        State newState = ExitState ();
-        DoneExit = newState.Context.IsComplete;
-        log(DoneExit.ToString());
-        return newState;
+        public static State<T> NullState () {
+            return new StateNull() as State<T>;
+        }
+
+        public virtual State<T> Enter () {
+            return NullState();
+        }
+
+        public virtual State<T> Update () {
+            return NullState();
+        }
+
+        public virtual State<T> Exit () {
+            return NullState();
+        }
     }
 }
