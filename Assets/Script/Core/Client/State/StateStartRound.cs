@@ -4,33 +4,37 @@ namespace mStateFramework {
     public class StateStartRound : State<Game> {
         private readonly Player.PlayerID serverPID;
 
-        // public StateStartRound (Player.PlayerID serverPID) : base () {
-        //     this.serverPID = serverPID;
-        // }
+        public StateStartRound (Game currentContext, Player.PlayerID serverPID) : base (currentContext) {
+            this.serverPID = serverPID;
+        }
 
         protected override State<Game>.Stage SetStage () {
             return State<Game>.Stage.Enter;
         }
 
-        // protected override State Enter () {
-        //     int serverPlayerIDIndex = -1;
-        //     int currentPlayerIDIndex = -1;
+        public override State<Game> Enter () {
+            Game game = Game.CopyOf (StateContext.Current);
 
-        //     foreach (Player p in GameWithUpdatedState.Players) {
-        //         p.AssignedPaddle.ChangePhaseToServe ();
+            Player[] players = new Player[] { 
+                Player.NewCopyFrom (game.PlayerOne), 
+                Player.NewCopyFrom (game.PlayerTwo)
+            };
 
-        //         ++currentPlayerIDIndex;
+            int iServer = -1;
+            int iCurrentPlayer = -1;
 
-        //         if (p.PID == serverPID) {
-        //             serverPlayerIDIndex = currentPlayerIDIndex;
-        //         }
-        //     }
+            foreach (Player p in players) {
+                p.AssignedPaddle.ChangePhaseToServe ();
 
-        //     Player[] playersWithServerSet = new Player[] { 
-        //         GameWithUpdatedState.PlayerOne, 
-        //         GameWithUpdatedState.PlayerTwo 
-        //     };
+                ++iCurrentPlayer;
 
-        // }
+                if (p.PID == serverPID) {
+                    iServer = iCurrentPlayer;
+                }
+            }
+
+            game = new Game(players); // todo: needs copyTo overload
+            return null;
+        }
     }
 }

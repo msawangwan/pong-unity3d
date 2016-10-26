@@ -18,7 +18,7 @@ namespace mStateFramework {
                 p.AssignedPaddle.EnableOnlyIfInactive ();
             }
 
-            return new StateStartRound();
+            return new StateStartRound (game, Player.PlayerID.P1);
         }
     }
 }

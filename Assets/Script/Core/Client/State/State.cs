@@ -27,9 +27,7 @@ namespace mStateFramework {
 
         public State (T currentContext) {
             StateContext = new State<T>.Context (currentContext);
-        }
 
-        public State () {
             log = msg => Debug.LogFormat (
                 "[STATE][INFO][{0}]: {1}", 
                 this.GetType().Name, 
@@ -44,7 +42,7 @@ namespace mStateFramework {
         protected abstract State<T>.Stage SetStage ();
 
         public static State<T> NullState () {
-            return new StateNull() as State<T>;
+            return new StateNull (null) as State<T>;
         }
 
         public virtual State<T> Enter () {
