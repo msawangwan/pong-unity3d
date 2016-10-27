@@ -196,6 +196,7 @@ public abstract class Paddle : MonoBehaviour {
 
     private void Update () {
         if (isInServePhase == true && isSetAsServing == true) {
+            Debug.LogWarningFormat("[STATUS] Paddle: {0} in serve phase update loop", AssignedPlayer);
             if (serveState == 0) {
                 if (ball == null) {
                     ball = BallManager.StaticInstance.CurrentBall;
@@ -219,14 +220,18 @@ public abstract class Paddle : MonoBehaviour {
                     serveState = 0;
                 }
             }
+
+            return;
         } else {
             colliderNormal = CalculateNormal (assignedPlayer);
             isInPlayPhase = true;
+            return;
         }
 
         if (isInPlayPhase == true) {
             if (playState == 0)  {
                 Debug.LogWarningFormat("[STATUS] Paddle: {0} in play phase update loop", AssignedPlayer);
+                return;
             }
         }
     }

@@ -69,7 +69,7 @@ public class GameController : MonoBehaviour {
         }
 
         if (state == -25) {
-            game = Game.EnterState (new GameStateInitGame (game));
+            game = Game.EnterState (new GameStateInitGame (game)); //STATE 1
             state = -15;
             return;
         }
@@ -103,7 +103,7 @@ public class GameController : MonoBehaviour {
         }
 
         if (state == 5) {
-            game = Game.EnterState (new GameStateServe (game, Player.PlayerID.P1));
+            game = Game.EnterState (new GameStateServe (game, Player.PlayerID.P1)); //STATE 2
             state = 10;
             return;
         }
@@ -116,9 +116,9 @@ public class GameController : MonoBehaviour {
         }
 
         if (state == 20) {
-            Player.PlayerID scorer = Game.TryDetermineScoringPlayer (onScore);
+            Player.PlayerID scorer = Player.TryDetermineScoringPlayer (onScore);
             if (scorer != 0) {
-                game = Game.EnterState (new GameStatePlayerScored (game, scorer));
+                game = Game.EnterState (new GameStatePlayerScored (game, scorer)); //STATE 3
                 onScore = null;
                 state = 21;
                 return;
@@ -152,7 +152,7 @@ public class GameController : MonoBehaviour {
         }
 
         if (state == 40) {
-            game = Game.EnterState (new GameStateCheckScoreForWin (game, Parameters.WinningScore.Value));
+            game = Game.EnterState (new GameStateCheckScoreForWin (game, Parameters.WinningScore.Value)); //STATE 4
             if (game.PlayerRoundWinner != null) {
                 state = 41;
             } else {
@@ -187,7 +187,7 @@ public class GameController : MonoBehaviour {
         }
 
         if (state == 45) {
-            game = Game.EnterState (new GameStateCheckRoundsWon (game, Parameters.RequiredWins.Value));
+            game = Game.EnterState (new GameStateCheckRoundsWon (game, Parameters.RequiredWins.Value)); //STATE 5
             if (game.PlayerGameWinner != null) {
                 state = 46;
             } else {

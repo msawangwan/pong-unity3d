@@ -42,12 +42,15 @@ public class Player {
     private int pointsScored = 0;
     private int roundsWon = 0;
 
-    public Player () { }
+    public Player () {
+        AssignPaddle ();
+    }
 
     public Player (Player.PlayerID pid, int points = 0, int wins = 0) {
         PID = pid;
         pointsScored = points;
         roundsWon = wins;
+        AssignPaddle ();
     }
 
     public static Player NewCopyFrom (Player p) {
@@ -62,7 +65,17 @@ public class Player {
         return new Player (p.PID, p.PointsScored, (p.RoundsWon + 1));
     }
 
-    public void AssignPaddle () {
+    public static Player.PlayerID TryDetermineScoringPlayer (System.Func<int> onScore) {
+        Player.PlayerID scorer = (Player.PlayerID) onScore.InvokeSafe ();
+
+        if (scorer != 0) {
+            return scorer;
+        }
+
+        return 0;
+    }
+
+    private void AssignPaddle () {
         foreach (Paddle paddle in Paddle.Instances) {
             if ((int) paddle.Parameters.PID == (int) this.PID) {
                 Debug.LogFormat("Assigned player {0} to paddle {1}", this.PID, paddle.Parameters.PID);

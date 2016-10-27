@@ -24,7 +24,6 @@ public class GameStatePlayerScored : GameState {
             GameWithUpdatedState.PlayerTwo 
         };
 
-
         Player scored = players[scoringPlayerIndex];
         players[scoringPlayerIndex] = Player.Add1Score(scored);
 

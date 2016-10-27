@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using mExtensions.Enum;
 
 namespace mStateFramework {
@@ -23,23 +24,24 @@ namespace mStateFramework {
         public State<T>.Stage CurrentStage { get; private set; }
         public State<T>.Stage NextStage { get; private set; }
 
-        protected System.Action<string> log;
+        protected Func<int> callbackReturnInteger;
+        protected Action<int> callbackTakeInteger;
+        protected Action<string> log;
 
         public State (T currentContext) {
             StateContext = new State<T>.Context (currentContext);
 
             log = msg => Debug.LogFormat (
-                "[STATE][INFO][{0}]: {1}", 
+                "[STATE][INFO][{0}]: [[{1}]] [{2}]", 
                 this.GetType().Name, 
-                msg
+                msg,
+                Time.time
             );
 
-            CurrentStage = SetStage ();
-
-            log ("constructor, set stage as - " + CurrentStage.AsString());
+            CurrentStage = SetInitialStage ();
         }
 
-        protected abstract State<T>.Stage SetStage ();
+        protected abstract State<T>.Stage SetInitialStage ();
 
         public static State<T> NullState () {
             return new StateNull (null) as State<T>;

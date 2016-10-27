@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using mExtensions.Common;
 using mExtensions.Enum;
 using System.Collections.Generic;
 
@@ -6,6 +7,7 @@ namespace mStateFramework {
     public class StateController : MonoBehaviour {
         public enum Step : int {
             None = 0,
+            Continue,
             EnterMenu,
             OnMenu,
             ExitMenu,
@@ -20,9 +22,8 @@ namespace mStateFramework {
         private State<Game>.Stage stage = State<Game>.Stage.None;
 
         private State<Game> current = null;
-        private State<Game> next = null;
-        private State<Game> end = null;
-    
+        private State<Game> newCurrent = null;
+
         private Game game = null;
 
 
@@ -33,36 +34,59 @@ namespace mStateFramework {
 
         private void Start () {
             log = msg => Debug.LogFormat (
-                "[STATE][INFO][{0}]: {1}", 
+                "[STATE][INFO][{0}]: [{1}] [{2}]", 
                 this.GetType().Name, 
-                msg
+                msg,
+                0// Time.time
             );
+            
+            log("[Logger Initialised]");
         }
 
         private bool ProcessFrameEnterGameplay () {
-            step = StateController.Step.OnGameplay;
+            log("[Entered EnterGameplay]");
+
+            if (current.IsNull ()) {
+                current = new StateSpawnNewSession (null);
+                step = StateController.Step.OnGameplay;
+                return true;
+            }
+
             return true;
         }
 
         private bool ProcessFrameOnGameplay () {
-            if (current == null) {
-                current = new StateSpawnNewSession(null);
-                return true;
-            }
+            log("[Entered OnGameplay]");
+            log("[Stage: " + current.CurrentStage + "]");
 
-            log("processing gameplay, stage = " + current.CurrentStage);
+            newCurrent = null;
 
             switch (current.CurrentStage) {
                 case State<Game>.Stage.None:
                     return true;
                 case State<Game>.Stage.Enter:
-                    current = current.Enter ();
+                    newCurrent = current.Enter ();
+
+                    if (newCurrent.IsNull () == false) {
+                        current = newCurrent;
+                    }
+
                     return true;
                 case State<Game>.Stage.Update:
-                    current = current.Update ();
+                    newCurrent = current.Update ();
+
+                    if (newCurrent.IsNull () == false) {
+                        current = newCurrent;
+                    }
+
                     return true;
                 case State<Game>.Stage.Exit:
-                    next = current.Exit ();
+                    newCurrent  = current.Exit ();
+
+                    if (newCurrent.IsNull () == false) {
+                        current = newCurrent;
+                    }
+    
                     return true;
                 default:
                     return false;
@@ -70,7 +94,7 @@ namespace mStateFramework {
         }
 
         private void Update () {
-            log("update, step = " + step.AsString());
+            log("[Update: Current Step is " + step.AsString() + " ]");
 
             switch (step) {
                 case StateController.Step.None:
@@ -88,6 +112,8 @@ namespace mStateFramework {
                     ProcessFrameOnGameplay ();
                     return;
                 case StateController.Step.ExitGameplay:
+                    return;
+                default:
                     return;
             }
         }
