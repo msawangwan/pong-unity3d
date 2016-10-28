@@ -9,14 +9,17 @@ namespace mStateFramework {
 
         public StateGameplay (Game currentContext) : base (currentContext) {
             if (currentContext != null) {
-                this.game = Game.CopyOf(currentContext);
+                // this.game = Game.CopyOf(StateContext.Current);
+                this.game = StateContext.Current;
             }
 
             log("Initialised: " + this.GetType().FullName);
         }
 
-        protected override State<Game> SetNext () {
-            return nextState;
+        protected override State<Game> DoNextState {
+            get {
+                return nextState;
+            }
         }
 
         protected override State<Game>.Stage SetInitialStage () {

@@ -5,7 +5,7 @@ namespace mStateFramework {
     public class StateSpawnNewSession : StateGameplay {
         protected override State<Game> nextState {
             get {
-                return new StateGameSetup (game);
+                return nnnnnn;
             }
         }
 
@@ -15,7 +15,11 @@ namespace mStateFramework {
             }
         }
 
-        public StateSpawnNewSession (Game currentContext) : base (currentContext) {}
+        private readonly State<Game> nnnnnn = null;
+
+        public StateSpawnNewSession (Game currentContext) : base (currentContext) {
+            nnnnnn = new StateGameSetup(game);
+        }
 
         public override bool Enter () {
             return true;

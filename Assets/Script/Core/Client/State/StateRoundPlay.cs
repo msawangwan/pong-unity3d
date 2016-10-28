@@ -4,7 +4,7 @@ namespace mStateFramework {
     public class StateRoundPlay : StateGameplay {
         protected override State<Game> nextState {
             get {
-                return new StateRoundPlay (game);
+                return nnnn;
             }
         }
 
@@ -14,10 +14,14 @@ namespace mStateFramework {
             } 
         }
 
-        public StateRoundPlay (Game currentContext) : base (currentContext) { }
+        private readonly State<Game> nnnn = null;
+
+        public StateRoundPlay (Game currentContext) : base (currentContext) {
+            nnnn = new StateRoundPlay(game);
+        }
 
         public override bool Update () {
-            return false;
+            return true;
         }        
     }
 }

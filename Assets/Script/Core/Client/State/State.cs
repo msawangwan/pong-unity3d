@@ -21,7 +21,7 @@ namespace mStateFramework {
 
         public readonly State<T>.Context StateContext;
 
-        public State<T> Next { get; private set; }
+        public State<T> Next { get { return DoNextState; } }
         public State<T>.Stage CurrentStage { get; private set; }
 
         protected Func<int> callbackReturnInteger;
@@ -38,22 +38,13 @@ namespace mStateFramework {
                 Time.time
             );
 
-            //Next = SetNext ();
             CurrentStage = SetInitialStage ();
         }
 
-        protected abstract State<T> SetNext ();
+        protected abstract State<T> DoNextState { get; }
         protected abstract State<T>.Stage SetInitialStage ();
 
-        public static State<T> NullState () {
-            return new StateNull (null) as State<T>;
-        }
-
         public virtual bool Enter () {
-            return true;
-        }
-
-        public virtual bool Enter (T context) {
             return true;
         }
 
@@ -61,15 +52,7 @@ namespace mStateFramework {
             return true;
         }
 
-        public virtual bool Update (T context) {
-            return true;
-        }
-
         public virtual bool Exit () {
-            return true;
-        }
-
-        public virtual bool Exit (T context) {
             return true;
         }
     }

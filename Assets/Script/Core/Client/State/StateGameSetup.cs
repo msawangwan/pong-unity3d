@@ -6,7 +6,7 @@ namespace mStateFramework {
     public class StateGameSetup : StateGameplay {
         protected override State<Game> nextState {
             get {
-                return new StateDesignateServer (game, Player.PlayerID.P1);
+                return nnnnnn;
             }
         }
 
@@ -16,7 +16,11 @@ namespace mStateFramework {
             } 
         }
 
-        public StateGameSetup (Game currentContext) : base (currentContext) { }
+        private readonly State<Game> nnnnnn = null;
+
+        public StateGameSetup (Game currentContext) : base (currentContext) { 
+            nnnnnn = new StateDesignateServer (game, Player.PlayerID.P1);
+        }
 
         public override bool Enter () {
             bool wasSuccess = false;

@@ -2,7 +2,7 @@
     public class StateWaitForServe : StateGameplay {
         protected override State<Game> nextState {
             get {
-                return new StateRoundPlay (game);
+                return nnnnn;
             }
         }
 
@@ -12,10 +12,13 @@
             } 
         }
 
+        private readonly State<Game> nnnnn = null;
+
         private Player.PlayerID serverPID;
 
         public StateWaitForServe (Game currentContext, Player.PlayerID serverPID) : base (currentContext) {
             this.serverPID = serverPID;
+            nnnnn = new StateRoundPlay(game);
         }
 
         public override bool Update () {

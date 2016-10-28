@@ -36,16 +36,19 @@ namespace mStateFramework {
         }
 
         private void Update () {
-            if (current.IsNull ()) {
-                current = new StateSpawnNewSession (null);
-                // isAlreadyGame = true;
+            if (stage == StateController.Stage.None) {
+                return;
+            }
+
+            if (current.IsNull () && isAlreadyGame == false) {
+                current = new StateSpawnNewSession (new Game());
+                isAlreadyGame = true;
             }
 
             log("[Update: Current Stage is " + stage.AsString() + " ]");
+            log("[Update: Current State is " + current.GetType().Name + " ]");
 
             switch (stage) {
-                case StateController.Stage.None:
-                    break;
                 case StateController.Stage.Continue:
                     break;
                 case StateController.Stage.Block:
@@ -68,7 +71,8 @@ namespace mStateFramework {
                 stage = NextStage(stage);
 
                 if (current_temp == StateController.Stage.Exit) {
-                    log("[Update: Stage Exit Reached: " +  current.GetType().Name + " " + current.Next.GetType().Name  +" ]");
+                    log("[Update: Stage Exit Reached: " +  current.GetType().Name + " ]");
+                    // log("[Update: Stage Exit Reached: " +  current.GetType().Name + " " + current.Next.GetType().Name  +" ]");
                     current = current.Next;
                 }
 
