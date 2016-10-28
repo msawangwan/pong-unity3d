@@ -20,24 +20,24 @@ namespace mStateFramework {
 
 
         public override bool Exit () {
-            Player[] players = new Player[] { 
-                Player.NewCopyFrom (StateContext.Current.PlayerOne), 
-                Player.NewCopyFrom (StateContext.Current.PlayerTwo) 
-            };
+            // Player[] players = new Player[] { 
+            //     Player.NewCopyFrom (StateContext.Current.PlayerOne), 
+            //     Player.NewCopyFrom (StateContext.Current.PlayerTwo) 
+            // };
 
-            int iCurrentPlayer = -1;
-            int iScorer = -1;
+            // int iCurrentPlayer = -1;
+            // int iScorer = -1;
 
-            foreach (Player p in players) {
-                ++iCurrentPlayer;
-                if (p.PID == scorerPID) {
-                    iScorer = iCurrentPlayer;
-                    break;
-                }
-            }
+            // foreach (Player p in players) {
+            //     ++iCurrentPlayer;
+            //     if (p.PID == scorerPID) {
+            //         iScorer = iCurrentPlayer;
+            //         break;
+            //     }
+            // }
 
-            Player scored = Player.NewCopyFrom (players[iScorer]);
-            players[iScorer] = Player.Add1Score (scored);
+            // Player scored = Player.NewCopyFrom (players[iScorer]);
+            // players[iScorer] = Player.Add1Score (scored);
 
             return false;
         }        

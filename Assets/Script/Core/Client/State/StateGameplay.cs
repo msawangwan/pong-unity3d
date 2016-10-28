@@ -10,7 +10,7 @@ namespace mStateFramework {
         public StateGameplay (Game currentContext) : base (currentContext) {
             if (currentContext != null) {
                 // this.game = Game.CopyOf(StateContext.Current);
-                this.game = StateContext.Current;
+                this.game = currentContext;
             }
 
             log("Initialised: " + this.GetType().FullName);
