@@ -39,7 +39,7 @@ namespace mStateFramework {
             // Player scored = Player.NewCopyFrom (players[iScorer]);
             // players[iScorer] = Player.Add1Score (scored);
 
-            return false;
+            return true;
         }        
     }
 }
