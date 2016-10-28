@@ -16,7 +16,7 @@ namespace mStateFramework {
 
         private readonly Player.PlayerID scorerPID;
 
-        public StateRoundOnScore (Game currentContext, Player.PlayerID scorerPID) : base (currentContext) { }
+        public StateRoundOnScore (Game context, Player.PlayerID scorerPID) : base (context) { }
 
 
         public override bool Exit () {

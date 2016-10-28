@@ -1,10 +1,12 @@
-﻿using UnityEngine;
-using mExtensions.Common;
+﻿using mExtensions.Common;
 
 namespace mStateFramework {
     public class StateSpawnNewSession : StateGameplay {
         protected override State<Game> nextState {
             get {
+                if (nnnnnn.IsNull()) {
+                    nnnnnn = new StateMapPlayerToPaddle(game);
+                }
                 return nnnnnn;
             }
         }
@@ -15,11 +17,9 @@ namespace mStateFramework {
             }
         }
 
-        private readonly State<Game> nnnnnn = null;
+        private State<Game> nnnnnn = null;
 
-        public StateSpawnNewSession (Game currentContext) : base (currentContext) {
-            nnnnnn = new StateGameSetup(game);
-        }
+        public StateSpawnNewSession (Game context) : base (context) { }
 
         public override bool Enter () {
             return true;

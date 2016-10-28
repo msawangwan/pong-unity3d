@@ -225,7 +225,6 @@ public abstract class Paddle : MonoBehaviour {
         } else {
             colliderNormal = CalculateNormal (assignedPlayer);
             isInPlayPhase = true;
-            return;
         }
 
         if (isInPlayPhase == true) {

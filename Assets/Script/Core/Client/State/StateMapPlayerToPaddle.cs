@@ -1,11 +1,15 @@
 ﻿/// <summary>
 /// todo: rename to paddlesetup
 /// </summary>
+using mExtensions.Common;
 
 namespace mStateFramework {
-    public class StateGameSetup : StateGameplay {
+    public class StateMapPlayerToPaddle : StateGameplay {
         protected override State<Game> nextState {
             get {
+                if (nnnnnn.IsNull()) {
+                    nnnnnn = new StateDesignateServer (game, Player.PlayerID.P1);
+                }
                 return nnnnnn;
             }
         }
@@ -16,11 +20,9 @@ namespace mStateFramework {
             } 
         }
 
-        private readonly State<Game> nnnnnn = null;
+        private State<Game> nnnnnn = null;
 
-        public StateGameSetup (Game currentContext) : base (currentContext) { 
-            nnnnnn = new StateDesignateServer (game, Player.PlayerID.P1);
-        }
+        public StateMapPlayerToPaddle (Game context) : base (context) { }
 
         public override bool Enter () {
             bool wasSuccess = false;

@@ -72,7 +72,7 @@ namespace mStateFramework {
 
                 if (current_temp == StateController.Stage.Exit) {
                     log("[Update: Stage Exit Reached: " +  current.GetType().Name + " ]");
-                    // log("[Update: Stage Exit Reached: " +  current.GetType().Name + " " + current.Next.GetType().Name  +" ]");
+                    log("[Update: Stage Exit Reached: " +  current.GetType().Name + " " + current.Next.GetType().Name  +" ]");
                     current = current.Next;
                 }
 

@@ -1,8 +1,13 @@
-﻿namespace mStateFramework {
+﻿using mExtensions.Common;
+
+namespace mStateFramework {
     public class StateDesignateServer : StateGameplay {
         protected override State<Game> nextState {
             get {
-                return new StateWaitForServe (gameInServeState, serverPID);
+                if (next.IsNull()) {
+                    next = new StateWaitForServe (gameInServeState, serverPID);
+                }
+                return next;
             }
         }
 
@@ -12,10 +17,12 @@
             } 
         }
 
+        private State<Game> next = null;
+
         private Player.PlayerID serverPID;
         private Game gameInServeState = null;
 
-        public StateDesignateServer (Game currentContext, Player.PlayerID serverPID) : base (currentContext) {
+        public StateDesignateServer (Game context, Player.PlayerID serverPID) : base (context) {
             this.serverPID = serverPID;
         }
 

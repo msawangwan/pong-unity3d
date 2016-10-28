@@ -8,6 +8,6 @@ namespace mStateFramework {
         //     }
         // }
 
-        // public StateUpdate (Game currentContext) : base (currentContext) { } 
+        // public StateUpdate (Game context) : base (context) { } 
     }
 }

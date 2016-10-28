@@ -14,6 +14,6 @@ namespace mStateFramework {
             }
         }
 
-        public StateNull (Game currentContext) : base (currentContext) { }
+        public StateNull (Game context) : base (context) { }
     }
 }

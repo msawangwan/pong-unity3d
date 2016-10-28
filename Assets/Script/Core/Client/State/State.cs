@@ -19,18 +19,12 @@ namespace mStateFramework {
             Exit
         }
 
-        // public readonly State<T>.Context StateContext;
-
         public State<T> Next { get { return DoNextState; } }
         public State<T>.Stage CurrentStage { get; private set; }
 
-        protected Func<int> callbackReturnInteger;
-        protected Action<int> callbackTakeInteger;
         protected Action<string> log;
 
-        public State (T currentContext) {
-            // StateContext = new State<T>.Context (currentContext);
-
+        public State (T context) {
             log = msg => Debug.LogFormat (
                 "[STATE][INFO][{0}]: [[{1}]] [{2}]", 
                 this.GetType().Name, 
