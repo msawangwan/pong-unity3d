@@ -2,7 +2,7 @@
 
 namespace mExtensions.Enum {
     public static class ExtensionEnum {
-        public static string AsString (this mStateFramework.StateController.Step e) {
+        public static string AsString (this mStateFramework.StateController.Stage e) {
             return e.ToString();
         }
 
@@ -10,7 +10,7 @@ namespace mExtensions.Enum {
             return e.ToString();
         }
 
-        public static int AsInt (this mStateFramework.StateController.Step e) {
+        public static int AsInt (this mStateFramework.StateController.Stage e) {
             return (int) e;
         }
 

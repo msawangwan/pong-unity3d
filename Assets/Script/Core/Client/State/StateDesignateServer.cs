@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿namespace mStateFramework {
+    public class StateDesignateServer : StateGameplay {
+        protected override State<Game> nextState {
+            get {
+                return new StateWaitForServe (gameInServeState, serverPID);
+            }
+        }
 
-namespace mStateFramework {
-    public class StateRoundServe : StateGameplay {
         protected override State<Game>.Stage initialStage { 
             get { 
                 return State<Game>.Stage.Enter; 
@@ -9,12 +13,13 @@ namespace mStateFramework {
         }
 
         private Player.PlayerID serverPID;
+        private Game gameInServeState = null;
 
-        public StateRoundServe (Game currentContext, Player.PlayerID serverPID) : base (currentContext) {
+        public StateDesignateServer (Game currentContext, Player.PlayerID serverPID) : base (currentContext) {
             this.serverPID = serverPID;
         }
 
-        public override State<Game> Enter () {     
+        public override bool Enter () {
             Player[] players = new Player[] {
                 Player.NewCopyFrom (game.PlayerOne), 
                 Player.NewCopyFrom (game.PlayerTwo)
@@ -23,10 +28,10 @@ namespace mStateFramework {
             int iServer = -1;
             int iCurrentPlayer = -1;
 
-            foreach (Player p in players) {
-                p.AssignedPaddle.ChangePhaseToServe ();
-
+            foreach (Player p in game.Players) {
                 ++iCurrentPlayer;
+
+                p.AssignedPaddle.ChangePhaseToServe ();
                 if (p.PID == serverPID) {
                     iServer = iCurrentPlayer;
                 }
@@ -36,9 +41,9 @@ namespace mStateFramework {
             server.AssignedPaddle.IsSetAsServing = true;
             players[iServer] = server;
 
-            Game gameNewState = Game.CopyOf(game);
+            gameInServeState = Game.CopyOf(game);
 
-            return new StateRoundPlay (gameNewState);
+            return true;
         }
     }
 }

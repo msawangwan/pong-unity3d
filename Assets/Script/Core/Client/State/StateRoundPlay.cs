@@ -2,6 +2,12 @@
 
 namespace mStateFramework {
     public class StateRoundPlay : StateGameplay {
+        protected override State<Game> nextState {
+            get {
+                return new StateRoundPlay (game);
+            }
+        }
+
         protected override State<Game>.Stage initialStage { 
             get { 
                 return State<Game>.Stage.Enter; 
@@ -10,8 +16,8 @@ namespace mStateFramework {
 
         public StateRoundPlay (Game currentContext) : base (currentContext) { }
 
-        public override State<Game> Update () {
-            return null;
+        public override bool Update () {
+            return false;
         }        
     }
 }

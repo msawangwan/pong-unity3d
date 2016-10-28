@@ -1,35 +1,27 @@
 ﻿using UnityEngine;
 using mExtensions.Common;
 using mExtensions.Enum;
-using System.Collections.Generic;
 
 namespace mStateFramework {
-    public class StateController : MonoBehaviour {
-        public enum Step : int {
+    public partial class StateController : MonoBehaviour {
+        public enum Stage : int {
             None = 0,
             Continue,
-            EnterMenu,
-            OnMenu,
-            ExitMenu,
-            EnterGameplay,
-            OnGameplay,
-            ExitGameplay,
+            Block,
+            Enter,
+            Update,
+            Exit,
         }
 
-        private System.Action<string> log;
-
-        private StateController.Step step = StateController.Step.None;
-        private State<Game>.Stage stage = State<Game>.Stage.None;
-
+        private bool isAlreadyGame = false;
+        private bool isComplete = false;
         private State<Game> current = null;
-        private State<Game> newCurrent = null;
-
-        private Game game = null;
-
+        private StateController.Stage stage = StateController.Stage.None;
+        private System.Action<string> log;
 
         private void Awake () {
             GlobalMediator.RaiseOnNewGameStarted += 
-                () => step = StateController.Step.EnterGameplay;
+                () => stage = StateController.Stage.Enter;
         }
 
         private void Start () {
@@ -43,78 +35,68 @@ namespace mStateFramework {
             log("[Logger Initialised]");
         }
 
-        private bool ProcessFrameEnterGameplay () {
-            log("[Entered EnterGameplay]");
-
+        private void Update () {
             if (current.IsNull ()) {
                 current = new StateSpawnNewSession (null);
-                step = StateController.Step.OnGameplay;
-                return true;
+                // isAlreadyGame = true;
             }
 
-            return true;
-        }
+            log("[Update: Current Stage is " + stage.AsString() + " ]");
 
-        private bool ProcessFrameOnGameplay () {
-            log("[Entered OnGameplay]");
-            log("[Stage: " + current.CurrentStage + "]");
-
-            newCurrent = null;
-
-            switch (current.CurrentStage) {
-                case State<Game>.Stage.None:
-                    return true;
-                case State<Game>.Stage.Enter:
-                    newCurrent = current.Enter ();
-
-                    if (newCurrent.IsNull () == false) {
-                        current = newCurrent;
-                    }
-
-                    return true;
-                case State<Game>.Stage.Update:
-                    newCurrent = current.Update ();
-
-                    if (newCurrent.IsNull () == false) {
-                        current = newCurrent;
-                    }
-
-                    return true;
-                case State<Game>.Stage.Exit:
-                    newCurrent  = current.Exit ();
-
-                    if (newCurrent.IsNull () == false) {
-                        current = newCurrent;
-                    }
-    
-                    return true;
+            switch (stage) {
+                case StateController.Stage.None:
+                    break;
+                case StateController.Stage.Continue:
+                    break;
+                case StateController.Stage.Block:
+                    break;
+                case StateController.Stage.Enter:
+                    isComplete = current.Enter ();
+                    break;
+                case StateController.Stage.Update:
+                    isComplete = current.Update ();
+                    break;
+                case StateController.Stage.Exit:
+                    isComplete = current.Exit ();
+                    break;
                 default:
-                    return false;
+                    return;
             }
+
+            if (isComplete) {
+                StateController.Stage current_temp = stage;
+                stage = NextStage(stage);
+
+                if (current_temp == StateController.Stage.Exit) {
+                    log("[Update: Stage Exit Reached: " +  current.GetType().Name + " " + current.Next.GetType().Name  +" ]");
+                    current = current.Next;
+                }
+
+                log("[Update: Stage completed: " + current_temp.AsString() + " ]");
+                log("[Update: Setting next stage too: " + stage.AsString() + " ]");
+
+                return;
+            }
+
+            return;
         }
+    }
 
-        private void Update () {
-            log("[Update: Current Step is " + step.AsString() + " ]");
-
-            switch (step) {
-                case StateController.Step.None:
-                    return;
-                case StateController.Step.EnterMenu:
-                    return;
-                case StateController.Step.OnMenu:
-                    return;
-                case StateController.Step.ExitMenu:
-                    return;
-                case StateController.Step.EnterGameplay:
-                    ProcessFrameEnterGameplay ();
-                    return;
-                case StateController.Step.OnGameplay:
-                    ProcessFrameOnGameplay ();
-                    return;
-                case StateController.Step.ExitGameplay:
-                    return;
+    public partial class StateController {
+        private StateController.Stage NextStage (StateController.Stage currentStage) {
+            switch (currentStage) {
+                case StateController.Stage.Continue:
+                    return StateController.Stage.Continue;
+                case StateController.Stage.Block:
+                    return StateController.Stage.Block;
+                case StateController.Stage.Enter:
+                    return StateController.Stage.Update;
+                case StateController.Stage.Update:
+                    return StateController.Stage.Exit;
+                case StateController.Stage.Exit:
+                    return StateController.Stage.Enter;
                 default:
-                    return;
+                    return StateController.Stage.None;
             }
         }
     }

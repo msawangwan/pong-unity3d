@@ -1,18 +1,31 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿/// <summary>
+/// todo: rename to paddlesetup
+/// </summary>
 
 namespace mStateFramework {
     public class StateGameSetup : StateGameplay {
-        protected override State<Game>.Stage initialStage { get { return State<Game>.Stage.Enter; } }
+        protected override State<Game> nextState {
+            get {
+                return new StateDesignateServer (game, Player.PlayerID.P1);
+            }
+        }
+
+        protected override State<Game>.Stage initialStage { 
+            get {
+                return State<Game>.Stage.Enter; 
+            } 
+        }
 
         public StateGameSetup (Game currentContext) : base (currentContext) { }
 
-        public override State<Game> Enter () {
+        public override bool Enter () {
+            bool wasSuccess = false;
+
             foreach (Player p in game.Players) {
-                p.AssignedPaddle.EnableOnlyIfInactive ();
+                wasSuccess = p.AssignedPaddle.EnableOnlyIfInactive ();
             }
 
-            return new StateRoundServe (game, Player.PlayerID.P1);
+            return wasSuccess;
         }
     }
 }
