@@ -11,6 +11,7 @@
             }
 
             scorer = onScore ();
+            onScore = null;
             return true;
         }
 
