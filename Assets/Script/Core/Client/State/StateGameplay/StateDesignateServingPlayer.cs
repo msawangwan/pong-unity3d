@@ -1,22 +1,22 @@
 ﻿namespace mStateFramework {
     public class StateDesignateServingPlayer: StateGame {
-        private readonly Player.PlayerID serverPID;
+        private readonly PlayerServer serving;
 
         public StateDesignateServingPlayer(Game context, PlayerServer serving) : base (context) {
-            this.serverPID = serving.ServerPID;
+            this.serving = serving;
         }
 
         public override void Enter () {
             foreach (Player p in context.Players) {
                 p.AssignedPaddle.ChangePhaseToServe();
-                if (p.PID == serverPID) {
+                if (p.PID == serving.ServerPID) {
                     p.AssignedPaddle.IsSetAsServing = true;
                 }
             }
         }
 
         public override State<Game> Exit () {
-            return new StateWaitUntilServeComplete (context);
+            return new StateWaitUntilServeComplete (context, serving);
         }
     }
 }

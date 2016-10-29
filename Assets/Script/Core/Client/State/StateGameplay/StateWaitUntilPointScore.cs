@@ -1,13 +1,21 @@
 ﻿namespace mStateFramework {
     public class StateWaitUntilPointScore : StateGame {
+        public static System.Func<Player.PlayerID> onScore { get; set; }
+        private Player.PlayerID scorer = Player.PlayerID.None;
+
         public StateWaitUntilPointScore(Game context) : base(context) { }
 
         public override bool Update () {
-            return false; // no score
+            if (onScore == null) {
+                return false;
+            }
+
+            scorer = onScore ();
+            return true;
         }
 
         public override State<Game> Exit () {
-            return next;
+            return new StateHandlePointScore (context, scorer);
         }
     }
 }

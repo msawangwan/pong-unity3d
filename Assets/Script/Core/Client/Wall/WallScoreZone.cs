@@ -17,9 +17,9 @@ public class WallScoreZone : MonoBehaviour {
                 return (int) AttackingPlayer;
             };
 
-            // mStateFramework.StateScorePoint.onScore = () => {
-            //     return (int) AttackingPlayer;
-            // };
+            mStateFramework.StateWaitUntilPointScore.onScore = () => {
+                return AttackingPlayer;
+            };
         }
     }
 }

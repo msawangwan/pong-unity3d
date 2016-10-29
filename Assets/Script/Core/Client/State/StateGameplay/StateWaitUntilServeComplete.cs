@@ -1,9 +1,13 @@
 ﻿namespace mStateFramework {
     public class StateWaitUntilServeComplete : StateGame {
-        public StateWaitUntilServeComplete (Game context) : base (context) { }
+        private readonly PlayerServer served;
+
+        public StateWaitUntilServeComplete (Game context, PlayerServer served) : base (context) {
+            this.served = served;
+        }
 
         public override bool Update () {
-            return context.PlayerOne.AssignedPaddle.IsInPlayPhase = true; // temp: hard-coded as p1
+            return served.Server.AssignedPaddle.IsInPlayPhase = true; // temp: hard-coded as p1
         }
 
         public override State<Game> Exit () {
