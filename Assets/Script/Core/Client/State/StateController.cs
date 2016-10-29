@@ -29,7 +29,7 @@ namespace mStateFramework {
                     return;
                 case StateController.State.Load:
                     if (state == null && isSessionInstance == false) {
-                        current = StateController.State.Update;
+                        current = StateController.State.Enter;
                         state = new StateStartSession (Game.New ());
                         isSessionInstance = true;
                     }
