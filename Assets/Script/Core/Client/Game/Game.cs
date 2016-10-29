@@ -70,6 +70,10 @@ public class Game  {
         players = new Player[] { player1, player2 };
     }
 
+    public static Game New () {
+        return new Game();
+    }
+
     public static Game CopyOf (Game game) {
         return new Game (game.PlayerOne, game.PlayerTwo);
     }

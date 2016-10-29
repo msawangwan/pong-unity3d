@@ -1,53 +1,27 @@
 ﻿using UnityEngine;
 using System;
-using mExtensions.Enum;
 
 namespace mStateFramework {
     public abstract class State<T> {
-        public class Context {
-            public readonly T Current;
+        protected static Action<string> log = (msg) => Debug.LogFormat("[info][state<T>] {0}", msg);
+        protected readonly State<T> next;
 
-            public Context(T current) {
-                Current = current;
-            }
+        public State () { }
+
+        public State (State<T> next) {
+            this.next = next;
         }
 
-        public enum Stage : int {
-            None = 0,
-            Enter,
-            Update,
-            Exit
-        }
-
-        public State<T> Next { get { return DoNextState; } }
-        public State<T>.Stage CurrentStage { get; private set; }
-
-        protected Action<string> log;
-
-        public State (T context) {
-            log = msg => Debug.LogFormat (
-                "[STATE][INFO][{0}]: [[{1}]] [{2}]", 
-                this.GetType().Name, 
-                msg,
-                Time.time
-            );
-
-            CurrentStage = SetInitialStage ();
-        }
-
-        protected abstract State<T> DoNextState { get; }
-        protected abstract State<T>.Stage SetInitialStage ();
-
-        public virtual bool Enter () {
-            return true;
+        public virtual void Enter () {
+            return;
         }
 
         public virtual bool Update () {
             return true;
         }
 
-        public virtual bool Exit () {
-            return true;
+        public virtual State<T> Exit () {
+            return next;
         }
     }
 }

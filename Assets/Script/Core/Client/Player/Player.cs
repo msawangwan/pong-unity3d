@@ -14,7 +14,14 @@ public class Player {
         P2,
     }
 
-    public Player.PlayerID PID { get; set; }
+    public Player.PlayerID PID { 
+        get {
+            return PlayerDetails.pID;
+        } 
+        set {
+            PlayerDetails.pID = value;
+        } 
+    }
 
     public Paddle AssignedPaddle { get { return assignedPaddle; } }
 
@@ -43,14 +50,28 @@ public class Player {
     private int roundsWon = 0;
 
     public Player () {
+        PlayerDetails = new Player.Details();
         AssignPaddle ();
     }
 
+    // private Player (Player.PlayerID pid, int points = 0, int wins = 0) {
+    //     PlayerDetails = new Player.Details();
+    //     PID = pid;
+    //     pointsScored = points;
+    //     roundsWon = wins;
+    //     AssignPaddle ();
+    // }
+
     public Player (Player.PlayerID pid, int points = 0, int wins = 0) {
+        PlayerDetails = new Player.Details();
         PID = pid;
         pointsScored = points;
         roundsWon = wins;
         AssignPaddle ();
+    }
+
+    public static Player New () {
+        return new Player(0);
     }
 
     public static Player NewCopyFrom (Player p) {

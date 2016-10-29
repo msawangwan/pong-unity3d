@@ -16,6 +16,10 @@ public class WallScoreZone : MonoBehaviour {
             GameController.onScore = () => {
                 return (int) AttackingPlayer;
             };
+
+            // mStateFramework.StateScorePoint.onScore = () => {
+            //     return (int) AttackingPlayer;
+            // };
         }
     }
 }
