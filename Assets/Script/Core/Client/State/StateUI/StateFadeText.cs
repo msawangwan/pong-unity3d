@@ -19,5 +19,9 @@ namespace mStateFramework {
             }
             return false;
         }
+
+        public override State<UI> Exit () {
+            return null;
+        }
 	}
 }

@@ -4,7 +4,7 @@ using System;
 namespace mStateFramework {
     public abstract class State<T> {
         protected static Action<string> log = (msg) => Debug.LogFormat("[info][state<T>] {0}", msg);
-        protected readonly State<T> next;
+        private readonly State<T> next;
 
         public State () { }
 

@@ -16,11 +16,6 @@ public class UIMasterCanvasController : MonoBehaviour { // todo: make singleton
         }
     }
 
-    // public float StartCoroutineForSecondsAndPrintToScreen (string text, float seconds = 2.0f) {
-    //     StartCoroutine (CenterNotificationHUD.FireCenterScreenNotification (CenterNotificationHUD, text, seconds));
-    //     return Time.time + seconds;
-    // }
-
     public void PrintCenter (string s) {
         CenterNotificationHUD.SetTextAndEnable(CenterNotificationHUD.gameObject, CenterNotificationHUD.BannerText, s);
     }
