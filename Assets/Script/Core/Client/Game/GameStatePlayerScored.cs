@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using mGameFramework;
 
 public class GameStatePlayerScored : GameState {
     private readonly Player.PlayerID scoringPID;

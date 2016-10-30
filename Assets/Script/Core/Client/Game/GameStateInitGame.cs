@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using mGameFramework;
 
 public class GameStateInitGame : GameState {
 	public GameStateInitGame (Game gameWithState) : base (gameWithState) {}

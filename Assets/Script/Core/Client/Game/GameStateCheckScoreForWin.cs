@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using mGameFramework;
 
 public class GameStateCheckScoreForWin : GameState {
     private readonly int scoreRequired;

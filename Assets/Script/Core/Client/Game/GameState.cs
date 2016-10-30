@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using mGameFramework;
 
 public abstract class GameState : IGameState {
 	public Game   GameWithUpdatedState { get; protected set; }

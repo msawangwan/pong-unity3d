@@ -1,10 +1,8 @@
-﻿namespace mStateFramework {
-    public class StateGame : State<Game> {
-        protected readonly Game context;
+﻿using mGameFramework;
 
-        public StateGame (Game context) : base() {
-            log("new instance of game state: " + this.GetType().Name);
-            this.context = context;
-        }
+namespace mStateFramework {
+    public class StateGame : State<Game> {
+        public StateGame(IStateContinuer co, IStateEnterer en, IStateUpdater up, IStateExiter ex, IStateBlocker bl) 
+            : base (co, en, up, ex, bl) {} 
     }
 }

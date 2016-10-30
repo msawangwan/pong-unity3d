@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using mGameFramework;
 
 public class GameController : MonoBehaviour {
     public static GameController StaticInstance = null;
