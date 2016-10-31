@@ -772,7 +772,7 @@ MonoBehaviour:
     PID: 2
     HorizontalMoveForceMultiplier: 55
     FixedHorizontalPosition: 3.8
-  AIResponseTimeMultiplier: 0.42
+  AIResponseTimeMultiplier: 0.245
 --- !u!114 &239600163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -916,7 +916,7 @@ GameObject:
   - 68: {fileID: 279201507}
   - 114: {fileID: 279201508}
   m_Layer: 0
-  m_Name: wall_ score-zone_bottom
+  m_Name: wall_ score-zone_defender-top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -962,7 +962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95d5c2c707ad46142bca257226bc6b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackingPlayer: 2
+  AttackingPlayer: 1
 --- !u!1 &303246425
 GameObject:
   m_ObjectHideFlags: 0
@@ -1769,7 +1769,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9be0c8c96d0cc3e47994b278b420307a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIController: {fileID: 1439306138}
 --- !u!4 &810384442
 Transform:
   m_ObjectHideFlags: 0
@@ -2039,7 +2038,7 @@ GameObject:
   - 68: {fileID: 959427443}
   - 114: {fileID: 959427444}
   m_Layer: 0
-  m_Name: wall_ score-zone_top
+  m_Name: wall_ score-zone_defender-bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2085,7 +2084,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95d5c2c707ad46142bca257226bc6b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackingPlayer: 1
+  AttackingPlayer: 2
 --- !u!1 &1035944329
 GameObject:
   m_ObjectHideFlags: 0

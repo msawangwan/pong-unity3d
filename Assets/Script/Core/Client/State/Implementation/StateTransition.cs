@@ -6,7 +6,6 @@ namespace mStateFramework {
 		public bool hasCompleted { get; protected set; }
 
         public IEnumerable LoadTransition() {
-            State<T>.log("started " + UnityEngine.Time.time);
             hasTriggered = true;
 
             IEnumerator transition = Transition().GetEnumerator();
@@ -16,7 +15,6 @@ namespace mStateFramework {
             }
 
             hasCompleted = true;
-            State<T>.log("done " + UnityEngine.Time.time);
         }
 
         protected abstract IEnumerable Transition();

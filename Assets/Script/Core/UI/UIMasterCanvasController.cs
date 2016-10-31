@@ -22,10 +22,6 @@ public class UIMasterCanvasController : MonoBehaviour { // todo: make singleton
         CenterNotificationHUD.SetTextAndEnable(CenterNotificationHUD.gameObject, CenterNotificationHUD.BannerText, s);
     }
 
-    // public void FadeCenter () {
-    //     StartCoroutine(CenterNotificationHUD.FadeThenDisable(CenterNotificationHUD.gameObject, CenterNotificationHUD.BannerText));
-    // }
-
     public void ClearCenter () {
         CenterNotificationHUD.ClearTextAndDisable(CenterNotificationHUD.gameObject, CenterNotificationHUD.BannerText);
     }

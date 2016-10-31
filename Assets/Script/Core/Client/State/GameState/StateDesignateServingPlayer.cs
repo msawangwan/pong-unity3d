@@ -37,7 +37,7 @@ namespace mStateFramework {
             return new StateContext<Game>(
                 game,
                 new StateWaitUntilServeComplete(serving),
-                new StateTransitionPrintFadeText ("READY", 2.0f)
+                new StateTransitionPrintFadeText ("GO", 2.0f)
             );
         }
     }
