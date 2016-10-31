@@ -20,11 +20,24 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    public  Game.GameParameters Parameters     = null;
     public  UIMasterCanvasController UI        = null;
-
     public  bool         OutputDebugToConsole  = false;
 
+    [SerializeField]
+    private Game.GameParameters parameters     = null;
+
+
+    public int PointsPerRound {
+        get {
+            return parameters.WinningScore.Value;
+        }
+    }
+
+    public int RoundLimit {
+        get {
+            return parameters.RequiredWins.Value;
+        }
+    }
     // private Game         game                  = null;
 
     // private int          state                 = -100;
@@ -47,9 +60,9 @@ public class GameController : MonoBehaviour {
     //     };
     // }
 
-    // private void Awake () {
-    //     StaticInstance = this;
-    // }
+    private void Awake () {
+        StaticInstance = this;
+    }
 
     // private void Start () {
     //     RegisterHandler ();

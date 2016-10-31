@@ -1,15 +1,16 @@
 ﻿using mGameFramework;
 
 namespace mStateFramework {
-    public class StateHandlePointScore : State<Game> {
-        private readonly Player.PlayerID scored; // todo: change to type
+    public class StateHandleRoundWin : State<Game> {
+        private readonly PlayerWinner winner;
         private Game game = null;
         private bool isExecuting = true;
+        private bool allocatedScore = false;
 
         protected override bool completedExecution { get; set; }
 
-        public StateHandlePointScore(Player.PlayerID scored) : base () {
-            this.scored = scored;
+        public StateHandleRoundWin (PlayerWinner winner) : base () {
+            this.winner = winner;
         }
 
         public override void Enter (Game context) {
@@ -18,16 +19,12 @@ namespace mStateFramework {
 
         public override void Execute () {
             if (isExecuting) {
-                foreach (Player p in game.Players) {
-                    if (p.PID == scored) {
-                        ++p.PointsScored;
-                    }
+                if (!allocatedScore) {
+                    allocatedScore = true;
+                    ++winner.Winner.RoundsWon;
                 }
 
-                UIMasterCanvasController.SingletonInstance.UpdateScore (
-                    game.PlayerOne.PointsScored,
-                    game.PlayerTwo.PointsScored
-                );
+                // todo: UPDATE UI
 
                 isExecuting = false;
             } else {
@@ -39,9 +36,7 @@ namespace mStateFramework {
         protected override StateContext<Game> InitialiseNewContext () {
             return new StateContext<Game>(
                 game,
-                new StateDesignateServingPlayer (
-                    new PlayerServer (game.PlayerOne)
-                ),
+                new StateCheckForGameWin (winner),
                 null
             );
         }

@@ -96,6 +96,15 @@ public class Player {
         return 0;
     }
 
+    public static PlayerScorer ExtractScoringPlayer (PlayerQuery pQuery) {
+        foreach (Player current in pQuery.Players) {
+            if (pQuery.QueryTargetPID == current.PID) {
+                return new PlayerScorer(current);
+            }
+        }
+        return null;
+    }
+
     private void AssignPaddle () {
         foreach (Paddle paddle in Paddle.Instances) {
             if ((int) paddle.Parameters.PID == (int) this.PID) {

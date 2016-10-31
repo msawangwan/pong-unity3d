@@ -1,14 +1,16 @@
 ﻿using mGameFramework;
-using mExtensions.Common;
 
 namespace mStateFramework {
-    public class StateWaitUntilPointScore : State<Game> {
-        public static System.Func<Player.PlayerID> onScore { get; set; }
-        private Player.PlayerID scorer = Player.PlayerID.None;
+    public class StateHandleGameWin : State<Game> {
+        private readonly PlayerWinner winner;
+        private Game game = null;
         private bool isExecuting = true;
-        private Game game;
 
         protected override bool completedExecution { get; set; }
+
+        public StateHandleGameWin(PlayerWinner winner) : base () {
+            this.winner = winner;
+        }
 
         public override void Enter (Game context) {
             game = context;
@@ -16,16 +18,10 @@ namespace mStateFramework {
 
         public override void Execute () {
             if (isExecuting) {
-                if (onScore.IsNull()) {
-                    return;
-                }
 
-                scorer = onScore ();
-
-                onScore = null;
+                // todo: track # of games won
+                
                 isExecuting = false;
-
-                return;
             } else {
                 OnChangeState ();
                 completedExecution = true;
@@ -35,8 +31,8 @@ namespace mStateFramework {
         protected override StateContext<Game> InitialiseNewContext () {
             return new StateContext<Game>(
                 game,
-                new StateHandlePointScore (scorer),
-                new StateTransitionPrintFadeText ("SCORE", 2.0f)
+                new StateSpawnNewSessionInstance(),
+                new StateTransitionPrintFadeText(winner.Winner.PID.ToString() + " WON", 2.0f)
             );
         }
     }

@@ -3373,13 +3373,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50b4942cff7195f41bfd1181d29096c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Parameters:
+  UI: {fileID: 1439306138}
+  OutputDebugToConsole: 0
+  parameters:
     winningScore:
       assignedValue: 3
     requiredWins:
       assignedValue: 1
-  UI: {fileID: 1439306138}
-  OutputDebugToConsole: 0
 --- !u!1 &1621590801
 GameObject:
   m_ObjectHideFlags: 0

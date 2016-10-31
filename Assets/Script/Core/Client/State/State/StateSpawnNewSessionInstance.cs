@@ -18,6 +18,7 @@ namespace mStateFramework {
 
         public override void Execute () {
             if (isExecuting) {
+                UIMasterCanvasController.SingletonInstance.UpdateScore (0,0); // todo: create a 'new game' state
                 isExecuting = false;
             } else {
                 OnChangeState ();
