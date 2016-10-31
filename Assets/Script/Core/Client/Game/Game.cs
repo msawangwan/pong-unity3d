@@ -32,10 +32,6 @@ namespace mGameFramework {
         private Winner   winnerRound   = default(Winner);
         private Winner   winnerGame    = default(Winner);
 
-        public static Game EnterState (GameState state) {
-            return state.UpdateState();
-        }
-
         public Game () {
             Player player1 = new Player (Player.PlayerID.P1);
             Player player2 = new Player (Player.PlayerID.P2);
