@@ -1,46 +1,24 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using mExtensions.Common;
 
 namespace mStateFramework {
-    public abstract class State<T> : IStateContinuer, IStateEnterer, IStateUpdater, IStateExiter, IStateBlocker {
-        protected static Action<string> log = 
-            (msg) => Debug.LogFormat("[info][state<t>] {0}", msg);
+    public abstract class State<T> : IState<T> {
+        public static Action<string> log = (msg) => UnityEngine.Debug.LogFormat("[info][state<t>] {0}", msg);
 
-        private readonly State<T> next;
+        public bool hasCompletedExecution { get { return completedExecution; } }
+        public Action<IStateContext<T>> OnRaiseStateChanged { get; set; }
 
-        private readonly IStateContinuer co;
-        private readonly IStateEnterer en;
-        private readonly IStateUpdater up;
-        private readonly IStateExiter ex;
-        private readonly IStateBlocker bl;
+        protected abstract bool completedExecution { get; set; }
+        protected abstract StateContext<T> InitialiseNewContext();
 
-        public State (IStateContinuer co, IStateEnterer en, IStateUpdater up, IStateExiter ex, IStateBlocker bl) {
-            this.co = co;
-            this.en = en;
-            this.up = up;
-            this.ex = ex;
-            this.bl = bl;
+        protected void OnChangeState() {
+            if (!OnRaiseStateChanged.IsNull()) {
+                StateContext<T> context = InitialiseNewContext();
+                OnRaiseStateChanged(context);
+            }
         }
 
-        public IStateContexter<T> CanContinue<T>(float t = 0) {
-            return co.CanContinue<T> (t);
-        }
-
-        public IStateContexter<T> Enter<T> (IStateContexter<T> current) 
-                where T : new () {
-            return en.Enter<T> (current);
-        }
-
-        public IStateContexter<T> Update<T> (float t = 0) {
-            return up.Update<T> (t);
-        }
-
-        public IStateContexter<T> Exit<T> (float t = 0) {
-            return ex.Exit<T> (t);
-        }
-
-        public float DetermineBlockDuration (float t = 0) {
-            return bl.DetermineBlockDuration (t);
-        }
+        public abstract void Enter(T currentContext);
+        public abstract void Execute();
     }
 }

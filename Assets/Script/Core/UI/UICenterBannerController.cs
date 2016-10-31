@@ -11,7 +11,7 @@ public class UICenterBannerController : MonoBehaviour {
         yield return new WaitForEndOfFrame();
         banner.gameObject.Enable();
         yield return new WaitForSeconds(delay);
-        yield return StartCoroutine (FadeEnunerator.CanvasGroupToZero (gameObject));
+        yield return StartCoroutine (FadeEnumerator.CanvasGroupToZero (gameObject));
         banner.gameObject.Disable();
     }
 
@@ -27,10 +27,9 @@ public class UICenterBannerController : MonoBehaviour {
         return section;
     }
 
-    public IEnumerator FadeThenDisable (GameObject section, Text field) {
-        yield return StartCoroutine (FadeEnunerator.CanvasGroupToZero (gameObject));
-        section.gameObject.Disable();
-        field.text = "";
+    public IEnumerator FadeThenDisable () {
+        yield return FadeEnumerator.CanvasGroupToZero (gameObject);
+        gameObject.Disable();
     }
 
     private void Start () {

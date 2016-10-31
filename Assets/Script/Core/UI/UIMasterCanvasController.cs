@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 
 public class UIMasterCanvasController : MonoBehaviour { // todo: make singleton
+    public static UIMasterCanvasController SingletonInstance = null;
+
     public UIGameScoreController ScoreHUD = null;
     public UICenterBannerController CenterNotificationHUD = null;
 
@@ -10,9 +12,9 @@ public class UIMasterCanvasController : MonoBehaviour { // todo: make singleton
 
     public void ToggleScoreboardActive (bool activate) {
         if (activate == true) {
-            ScoreHUD.gameObject.Enable ();
+            ScoreHUD.EnableOnlyIfInactive();
         } else {
-            ScoreHUD.gameObject.Disable ();
+            ScoreHUD.DisableOnlyIfActive();
         }
     }
 
@@ -20,11 +22,15 @@ public class UIMasterCanvasController : MonoBehaviour { // todo: make singleton
         CenterNotificationHUD.SetTextAndEnable(CenterNotificationHUD.gameObject, CenterNotificationHUD.BannerText, s);
     }
 
-    public void FadeCenter () {
-        StartCoroutine(CenterNotificationHUD.FadeThenDisable(CenterNotificationHUD.gameObject, CenterNotificationHUD.BannerText));
-    }
+    // public void FadeCenter () {
+    //     StartCoroutine(CenterNotificationHUD.FadeThenDisable(CenterNotificationHUD.gameObject, CenterNotificationHUD.BannerText));
+    // }
 
     public void ClearCenter () {
         CenterNotificationHUD.ClearTextAndDisable(CenterNotificationHUD.gameObject, CenterNotificationHUD.BannerText);
+    }
+
+    private void Awake() {
+        SingletonInstance = this;
     }
 }

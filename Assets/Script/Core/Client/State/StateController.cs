@@ -5,74 +5,107 @@ using mExtensions.Common;
 
 namespace mStateFramework {
     public partial class StateController : MonoBehaviour {
-        public enum State : int {
+        public enum Status : int {
             None = 0,
-            Load,
-            EnterUI,
-            UpdateUI,
-            ExitUI,
-            Enter,
-            Update,
-            Exit,
-            Continue,
+            Loading,
+            Executing,
+            Terminating,
         }
 
         public enum Session : byte {
-            NoInstance,
-            HasInstance,
+            NotLoaded,
+            HasLoaded,
         }
 
-        public UIMasterCanvasController UIController = null;
+        private StateController.Status controllerStatus = StateController.Status.None;
+        private StateController.Session session = StateController.Session.NotLoaded;
 
-        private StateController.State masterState = StateController.State.None;
-        private StateController.Session session = StateController.Session.NoInstance;
+        private Game game = null;
+        private UI ui = null;
 
-        private State<Game> gameState = null;
-        // private State<UI> uiState = null;
+        private IState<Game> current;
+        private IState<Game> next;
 
-        private bool canContinue = false;
+        private IState<Game> initialised {
+            set {
+                current = value;
+                current.OnRaiseStateChanged += HandleOnStateChanged;
+                current.Enter (game);
+            }
+        }
 
-        private void Awake () {
-            GlobalMediator.RaiseOnNewGameStarted +=
-                () => masterState = StateController.State.Load;
+        private IStateTransition transition;
+
+        private void HandleOnStateChanged(IStateContext<Game> context) {
+            game = context.Context;
+            next = context.NextState;
+            transition = context.Transition;
+        }
+
+        private void Start () {
+            GlobalMediator.RaiseOnNewGameStarted += 
+                () => controllerStatus = StateController.Status.Loading;
         }
 
         private void Update () {
-            switch (masterState) {
-                case StateController.State.None:
+            switch (controllerStatus) {
+                case StateController.Status.None:
                     return;
-                case StateController.State.Load:
-                    if (gameState == null && session == StateController.Session.NoInstance) {
-                        gameState = new StateGame(null, new StateCreateSessionInstance(), null, null, null);
-                        session = StateController.Session.HasInstance;
-                        masterState = StateController.State.Enter;
+                case StateController.Status.Loading:
+                    State<Game> newSession = LoadNew(session);
+
+                    if (newSession.IsNull()) {
+                        session = StateController.Session.NotLoaded;
+                        return;
                     }
+
+                    initialised = newSession;
+                    session = StateController.Session.HasLoaded;
+                    controllerStatus = StateController.Status.Executing;
+
+                    return;
+                case StateController.Status.Executing:
+                    if (transition.IsNull() && !current.hasCompletedExecution) {
+                        current.Execute();
+                        return;
+                    }
+
+                    current.OnRaiseStateChanged -= HandleOnStateChanged;
+
+                    if (next.IsNull()) {
+                        controllerStatus = StateController.Status.Terminating;
+                        return;
+                    }
+
+                    if (!transition.IsNull()) {
+                        if (!transition.hasTriggered) {
+                            StartCoroutine (transition.LoadTransition ().GetEnumerator ());
+                            return;
+                        }
+
+                        if (!transition.hasCompleted) {
+                            return;
+                        }
+                    }
+
+                    initialised = next;
+
+                    next = null;
+                    transition = null;
+
+                    return;
+                case StateController.Status.Terminating:
                     return;
                 default:
                     break;
             }
+        }
 
-            switch (masterState) {
-                case StateController.State.Enter:
-                    break;
-                case StateController.State.Update:
-                    break;
-                case StateController.State.Exit:
-                    break;
-                default:
-                    break;
+        private State<Game> LoadNew(StateController.Session sessionStatus) {
+            if (sessionStatus == StateController.Session.NotLoaded) {
+                return new StateSpawnNewSessionInstance();
             }
-
-            switch (masterState) {
-                case StateController.State.EnterUI:
-                    return;
-                case StateController.State.UpdateUI:
-                    break;
-                case StateController.State.ExitUI:
-                    break;
-                default:
-                    break;
-            }
+            return null;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FadeEnunerator : MonoBehaviour {
+public class FadeEnumerator : MonoBehaviour {
 	public static IEnumerator CanvasGroupToZero (GameObject go, float rate = 0.05f) {
         CanvasGroup cgroup = go.GetComponent<CanvasGroup>();
 		if (cgroup != null) {
