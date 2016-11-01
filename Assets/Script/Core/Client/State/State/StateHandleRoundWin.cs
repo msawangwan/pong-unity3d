@@ -3,11 +3,11 @@
 namespace mStateFramework {
     public class StateHandleRoundWin : State<Game> {
         private readonly PlayerWinner winner;
+
         private Game game = null;
-        private bool isExecuting = true;
         private bool allocatedScore = false;
 
-        protected override bool completedExecution { get; set; }
+        protected override bool isExecuting { get; set; }
 
         public StateHandleRoundWin (PlayerWinner winner) : base () {
             this.winner = winner;
@@ -29,7 +29,6 @@ namespace mStateFramework {
                 isExecuting = false;
             } else {
                 OnChangeState ();
-                completedExecution = true;
             }
         }
 

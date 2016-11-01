@@ -8,17 +8,25 @@ namespace mStateFramework {
         public bool hasCompletedExecution { get { return completedExecution; } }
         public Action<IStateContext<T>> OnRaiseStateChanged { get; set; }
 
-        protected abstract bool completedExecution { get; set; }
+        protected bool completedExecution { get; private set; }
+
+        protected abstract bool isExecuting { get; set; }
         protected abstract StateContext<T> InitialiseNewContext();
 
         protected void OnChangeState() {
             if (!OnRaiseStateChanged.IsNull()) {
                 StateContext<T> context = InitialiseNewContext();
                 OnRaiseStateChanged(context);
+                completedExecution = true;
             }
         }
 
         public abstract void Enter(T currentContext);
         public abstract void Execute();
+
+        public State() {
+            completedExecution = false;
+            isExecuting = true;
+        }
     }
 }

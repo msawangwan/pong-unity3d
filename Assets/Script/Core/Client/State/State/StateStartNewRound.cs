@@ -2,19 +2,26 @@
 using mUIFramework.mvc;
 
 namespace mStateFramework {
-	public class StateSpawnNewSessionInstance : State<Game> {
+    public class StateStartNewRound : State<Game> {
+        protected override bool isExecuting { get; set; }
         private Game game = null;
 
-        protected override bool isExecuting { get; set; }
-
-        public StateSpawnNewSessionInstance() : base () { }
+        public StateStartNewRound () : base () { }
 
         public override void Enter (Game context) {
-            game = new Game();
+            game = context;
         }
-
+    
         public override void Execute () {
             if (isExecuting) {
+                UIMasterController.Singleton.Scoreboard.UpdateScoreboardWith ( // todo: create a 'new game' state
+                    0, 0, UIScoreboardController.ScoreCategory.Point
+                );
+
+                UIMasterController.Singleton.Scoreboard.ToggleScoreboard (
+                    true
+                );
+
                 isExecuting = false;
             } else {
                 OnChangeState ();
@@ -24,7 +31,7 @@ namespace mStateFramework {
         protected override StateContext<Game> InitialiseNewContext () {
             return new StateContext<Game> (
                 game,
-                new StateStartNewRound (),
+                new StateMapPlayerToPaddle (),
                 null
             );
         }

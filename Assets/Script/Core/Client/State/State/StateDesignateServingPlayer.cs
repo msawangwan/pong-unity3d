@@ -3,10 +3,10 @@
 namespace mStateFramework {
     public class StateDesignateServingPlayer : State<Game> {
         private readonly PlayerServer serving;
-        private Game game = null;
-        private bool isExecuting = true;
 
-        protected override bool completedExecution { get; set; }
+        private Game game = null;
+
+        protected override bool isExecuting { get; set; }
 
         public StateDesignateServingPlayer(PlayerServer serving) : base () {
             this.serving = serving;
@@ -29,7 +29,6 @@ namespace mStateFramework {
 
             } else {
                 OnChangeState ();
-                completedExecution = true;
             }
         }
 

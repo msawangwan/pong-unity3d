@@ -3,11 +3,11 @@
 namespace mStateFramework {
     public class StateCheckForGameWin :State<Game> {
         private readonly PlayerWinner winner;
+
         private Game game = null;
-        private bool isExecuting = true;
         private State<Game> next;
 
-        protected override bool completedExecution { get; set; }
+        protected override bool isExecuting { get; set; }
 
         public StateCheckForGameWin (PlayerWinner winner) : base () {
             this.winner = winner;
@@ -34,7 +34,6 @@ namespace mStateFramework {
                 isExecuting = false;
             } else {
                 OnChangeState ();
-                completedExecution = true;
             }
         }
 

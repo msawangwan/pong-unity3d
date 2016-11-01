@@ -4,10 +4,10 @@ using mGameFramework;
 namespace mStateFramework {
     public class StateWaitUntilServeComplete : State<Game> {
         private readonly PlayerServer served;
-        private Game game = null;
-        private bool isExecuting = true;
 
-        protected override bool completedExecution { get; set; }
+        private Game game = null;
+
+        protected override bool isExecuting { get; set; }
 
         public StateWaitUntilServeComplete (PlayerServer served) : base () {
             this.served = served;
@@ -22,7 +22,6 @@ namespace mStateFramework {
                 isExecuting = !served.Server.AssignedPaddle.IsInPlayPhase; // temp: hard coded to p1
             } else {
                 OnChangeState ();
-                completedExecution = true;
             }
         }
 

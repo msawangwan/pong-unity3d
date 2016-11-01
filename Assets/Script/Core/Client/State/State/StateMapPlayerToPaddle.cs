@@ -3,9 +3,8 @@
 namespace mStateFramework {
     public class StateMapPlayerToPaddle : State<Game> {
         private Game game = null;
-        private bool isExecuting = true;
 
-        protected override bool completedExecution { get; set; }
+        protected override bool isExecuting { get; set; }
 
         public override void Enter (Game context) {
             game = context;
@@ -19,7 +18,6 @@ namespace mStateFramework {
                 isExecuting = false;
             } else {
                 OnChangeState();
-                completedExecution = true;
             }
         }
 

@@ -3,13 +3,12 @@ using mExtensions.Common;
 
 namespace mStateFramework {
     public class StateWaitUntilPointScore : State<Game> {
-        public static System.Func<Player.PlayerID> onScore { get; set; } // idea: make a static method of type 'player'
+        public static System.Func<Player.PlayerID> onScore { get; set; } // idea: make a static method of type 'player' or use a mediator
 
         private PlayerScorer scorer = null;
-        private bool isExecuting = true;
         private Game game;
 
-        protected override bool completedExecution { get; set; }
+        protected override bool isExecuting { get; set; }
 
         public override void Enter (Game context) {
             game = context;
@@ -27,7 +26,7 @@ namespace mStateFramework {
                     scorerPID
                 );
 
-                scorer = Player.ExtractScoringPlayer(query);
+                scorer = Player.ExtractScoringPlayer (query);
 
                 onScore = null;
                 isExecuting = false;
@@ -35,7 +34,6 @@ namespace mStateFramework {
                 return;
             } else {
                 OnChangeState ();
-                completedExecution = true;
             }
         }
 
