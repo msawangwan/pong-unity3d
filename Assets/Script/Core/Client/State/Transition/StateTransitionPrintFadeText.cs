@@ -1,7 +1,7 @@
 ﻿using mUIFramework.Core;
 using mUIFramework.mvc;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
 	public class StateTransitionPrintFadeText : StateTransition<UI> {
         private readonly string text;
         private readonly float duration;

@@ -1,4 +1,4 @@
-﻿namespace mStateFramework {
+﻿namespace mStateFramework.Core {
 	public class StateContext<T> : IStateContext<T>  {
         public T Context { get; private set; }
 		public IState<T> NextState { get; private set; }

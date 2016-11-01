@@ -1,6 +1,16 @@
 ﻿using UnityEngine;
 
 public class PaddleServeController : MonoBehaviour {
+    private Paddle paddle = null;
+    private Paddle paddleCached {
+        get {
+            if (paddle == null) {
+                paddle = gameObject.GetComponent<Paddle>();
+            }
+            return paddle;
+        }
+    }
+
     public Vector3 CalculateServiceForce (Paddle server, float serveForceMultiplier = 300.0f, float maxServeForce = 50.0f) { // paddleForceInfluence = input x
         Vector3 lateralMoveForce = server.RB.velocity.Truncate(maxServeForce);
         return new Vector3(lateralMoveForce.x, serveForceMultiplier, 0.0f);
@@ -16,18 +26,27 @@ public class PaddleServeController : MonoBehaviour {
         return false;
     }
 
-    public bool Serve (Ball ball, Vector3 serveForce) { // TODO: IMPORTANT TO VERIFY WE DO NOT SERVE OFF SCREEN!!!
+    public bool Serve (Ball ball, Vector3 serveForce) { // idea: use a fixed trigger area instead of calculating the bounds to check if player is on screen when serving
         if (ball != null) {
             if (ball.RB != null) {
-                ball.transform.SetParent (DynamicSceneGameObjectController.Container);
+                float xPos = paddleCached.transform.position.x;
 
-                ball.RB.isKinematic = false;
-                ball.RB.AddForce(serveForce);
+                bool leftSideScreenCheck = ((xPos - paddleCached.ColliderLength) <= paddleCached.LeftSideScreenBoundry);
+                bool rightSideScreenCheck = ((xPos + paddleCached.ColliderLength) >= paddleCached.RightSideScreenBoundry);
 
-                ball.TR.Clear ();
-                ball.TR.enabled = true;
+                if (leftSideScreenCheck || rightSideScreenCheck) {
+                    return false;
+                } else {
+                    ball.transform.SetParent (DynamicSceneGameObjectController.Container);
 
-                return true;
+                    ball.RB.isKinematic = false;
+                    ball.RB.AddForce(serveForce);
+
+                    ball.TR.Clear ();
+                    ball.TR.enabled = true;
+
+                    return true;
+                }
             }
         }     
         return false;

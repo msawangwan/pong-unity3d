@@ -13,7 +13,7 @@ public class WallScoreZone : MonoBehaviour {
                 Vector3.zero
             );
 
-            mStateFramework.StateWaitUntilPointScore.onScore = () => {
+            mStateFramework.Core.StateWaitUntilPointScore.onScore = () => {
                 return AttackingPlayer;
             };
         }

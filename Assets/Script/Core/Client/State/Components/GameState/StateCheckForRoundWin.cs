@@ -1,6 +1,6 @@
-﻿using mGameFramework;
+﻿using mGameFramework.Core;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
     public class StateCheckForRoundWin : State<Game> {
         private readonly PlayerScorer scored;
 

@@ -1,7 +1,7 @@
-﻿using mGameFramework;
+﻿using mGameFramework.Core;
 using mExtensions.Common;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
     public class StateWaitUntilPointScore : State<Game> {
         public static System.Func<Player.PlayerID> onScore { get; set; } // idea: make a static method of type 'player' or use a mediator
 

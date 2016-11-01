@@ -1,7 +1,7 @@
-﻿using mExtensions.Common;
-using mGameFramework;
+﻿using mGameFramework.Core;
+using mExtensions.Common;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
     public class StateWaitUntilServeComplete : State<Game> {
         private readonly PlayerServer served;
 

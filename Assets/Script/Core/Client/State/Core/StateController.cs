@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using mGameFramework;
+using mGameFramework.Core;
 using mUIFramework.Core;
 using mExtensions.Common;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
     public partial class StateController : MonoBehaviour {
         public enum Status : int {
             None = 0,
@@ -20,13 +20,12 @@ namespace mStateFramework {
         private StateController.Status controllerStatus = StateController.Status.None;
         private StateController.Session session = StateController.Session.NotLoaded;
 
-        private Game game = null;
-        private UI ui = null;
+        private Game game = null; // context
 
-        private IState<Game> current;
-        private IState<Game> next;
+        private IState<Game> current; // current state
+        private IState<Game> next; // queued state
 
-        private IState<Game> initialised {
+        private IState<Game> initialised { // run queued state through a property prior
             set {
                 current = value;
                 current.OnRaiseStateChanged += HandleOnStateChanged;

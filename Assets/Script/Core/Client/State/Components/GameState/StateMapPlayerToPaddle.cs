@@ -1,6 +1,6 @@
-﻿using mGameFramework;
+﻿using mGameFramework.Core;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
     public class StateMapPlayerToPaddle : State<Game> {
         private Game game = null;
 

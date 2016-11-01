@@ -1,16 +1,29 @@
-﻿using mGameFramework;
+﻿using mExtensions.Common;
+using mGameFramework.Core;
 using mUIFramework.mvc;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
 	public class StateSpawnNewSessionInstance : State<Game> {
+        private Session session = null;
         private Game game = null;
 
         protected override bool isExecuting { get; set; }
 
-        public StateSpawnNewSessionInstance() : base () { }
+        public StateSpawnNewSessionInstance () : base () { 
+            if (session.IsNull()) {
+                session = SessionController.SpawnNew ();
+                if (!session.IsValid) {
+                    log("invalid session");
+                }
+            }
+        }
+
+        public StateSpawnNewSessionInstance (Session session) : base () {
+            this.session = session;
+        }
 
         public override void Enter (Game context) {
-            game = new Game();
+            game = new Game ();
         }
 
         public override void Execute () {

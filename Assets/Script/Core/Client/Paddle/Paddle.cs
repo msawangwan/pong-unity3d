@@ -117,6 +117,18 @@ public abstract class Paddle : MonoBehaviour {
     private         Vector3                colliderNormal   = Vector3.zero;
     private         Vector3                hMoveForce       = Vector3.zero;
 
+    public float LeftSideScreenBoundry { 
+        get {
+            return xLeftWrapBound;
+        }
+    }
+
+    public float RightSideScreenBoundry { 
+        get {
+            return xRightWrapBound;
+        }
+    }
+
     public bool IsInServePhase {
         get {
             return isInServePhase;
@@ -228,11 +240,13 @@ public abstract class Paddle : MonoBehaviour {
                 hasServed = ServeBall ();
                 if (hasServed == true) {
                     Vector3 servePower = ServeController.CalculateServiceForce (this);
-                    ServeController.Serve (ball, servePower);
-                    isSetAsServing = false;
-                    isInServePhase = false;
-                    isInPlayPhase = true;
-                    serveState = 0;
+                    bool served = ServeController.Serve (ball, servePower);
+                    if (served) {
+                        isSetAsServing = false;
+                        isInServePhase = false;
+                        isInPlayPhase = true;
+                        serveState = 0;
+                    }
                 }
             }
 

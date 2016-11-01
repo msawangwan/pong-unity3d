@@ -1,6 +1,6 @@
-﻿using mGameFramework;
+﻿using mGameFramework.Core;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
     public class StateDesignateServingPlayer : State<Game> {
         private readonly PlayerServer serving;
 

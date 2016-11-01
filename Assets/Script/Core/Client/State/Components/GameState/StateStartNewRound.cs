@@ -1,7 +1,7 @@
-﻿using mGameFramework;
+﻿using mGameFramework.Core;
 using mUIFramework.mvc;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
     public class StateStartNewRound : State<Game> {
         protected override bool isExecuting { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace mGameFramework {
+namespace mGameFramework.Core {
     [System.Serializable]
     public class Game  {
         [System.Serializable]
@@ -26,11 +26,15 @@ namespace mGameFramework {
         public Player PlayerServing        { get { return playerServing; } }
         public Player PlayerRoundWinner    { get { return winnerRound.Current; } }
         public Player PlayerGameWinner     { get { return winnerGame.Current; } }
+        
+        public PlayerWinner WinningPlayer { get; set; }
+        public bool IsValid { get { return isValid; } }
 
         private Player[] players       = null;
         private Player   playerServing = null;
         private Winner   winnerRound   = default(Winner);
         private Winner   winnerGame    = default(Winner);
+        private bool isValid = true;
 
         public Game () {
             Player player1 = new Player (Player.PlayerID.P1);

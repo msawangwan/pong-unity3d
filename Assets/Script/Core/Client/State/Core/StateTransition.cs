@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace mStateFramework {
+namespace mStateFramework.Core {
 	public abstract class StateTransition<T> : IStateTransition {
 		public bool hasTriggered { get; protected set; }
 		public bool hasCompleted { get; protected set; }
