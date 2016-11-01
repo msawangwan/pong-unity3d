@@ -4,6 +4,7 @@ namespace mStateFramework {
     public class StateDesignateServingPlayer : State<Game> {
         private readonly PlayerServer serving;
 
+        private string text = string.Empty;
         private Game game = null;
 
         protected override bool isExecuting { get; set; }
@@ -22,11 +23,11 @@ namespace mStateFramework {
                     p.AssignedPaddle.ChangePhaseToServe();
                     if (p.PID == serving.ServerPID) {
                         p.AssignedPaddle.IsSetAsServing = true;
+                        text = string.Format("SERVER: {0}", serving.ServerPID);
                     }
                 }
 
                 isExecuting = false;
-
             } else {
                 OnChangeState ();
             }
@@ -36,7 +37,7 @@ namespace mStateFramework {
             return new StateContext<Game>(
                 game,
                 new StateWaitUntilServeComplete(serving),
-                new StateTransitionPrintFadeText ("GO", 2.0f)
+                new StateTransitionPrintFadeText (text, 2.0f)
             );
         }
     }

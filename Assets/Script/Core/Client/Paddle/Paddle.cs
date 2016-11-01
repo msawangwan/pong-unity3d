@@ -63,6 +63,18 @@ public abstract class Paddle : MonoBehaviour {
         }
     }
 
+    public TrailRenderer TR {
+        get {
+            if (tr == null) {
+                tr = gameObject.GetComponentInChildren<TrailRenderer> ();
+                if (tr == null) {
+                    Debug.LogErrorFormat("problem: {0} couldn't find a trail renderer in its children", gameObject.name);
+                }
+            }
+            return tr;
+        }
+    }
+
     public Vector3 ColliderNormal {
         get {
             return colliderNormal;
@@ -91,6 +103,7 @@ public abstract class Paddle : MonoBehaviour {
     private         PaddleServeController  serveController  = null;
     private         PaddleStrikeController strikeController = null;
     private         Rigidbody2D            rb               = null;
+    private         TrailRenderer          tr               = null;
     private         int                    serveState       = 0;
     private         int                    playState        = 0;
     private         float                  colliderLength   = 1.0f;
@@ -166,8 +179,10 @@ public abstract class Paddle : MonoBehaviour {
     private Vector3 WrapPositionIfOffScreen (float xComponentCurrentPosition) {
         float xInverted = xComponentCurrentPosition * -1.0f; // sign flip
         if ((xComponentCurrentPosition - colliderMidpoint) < xLeftWrapBound) {
+            TR.Clear ();
             return new Vector3 (xInverted - colliderLength, Parameters.FixedHorizontalPosition, 0.0f);
         } else if ((xComponentCurrentPosition + colliderMidpoint) > xRightWrapBound) {
+            TR.Clear ();
             return new Vector3 (xInverted + colliderLength, Parameters.FixedHorizontalPosition, 0.0f);
         } else {
             return transform.position;

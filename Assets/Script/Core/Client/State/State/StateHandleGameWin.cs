@@ -4,6 +4,7 @@ namespace mStateFramework {
     public class StateHandleGameWin : State<Game> {
         private readonly PlayerWinner winner;
 
+        private string text = string.Empty;
         private Game game = null;
 
         protected override bool isExecuting { get; set; }
@@ -20,7 +21,8 @@ namespace mStateFramework {
             if (isExecuting) {
 
                 // todo: track # of games won and branch if necessary
-                
+                text = string.Format("GAME WINNER: {0}", winner.Winner.PID);
+
                 isExecuting = false;
             } else {
                 OnChangeState ();
@@ -31,7 +33,7 @@ namespace mStateFramework {
             return new StateContext<Game>(
                 game,
                 new StateStartNewRound(),
-                new StateTransitionPrintFadeText(winner.Winner.PID.ToString() + " WON", 2.0f)
+                new StateTransitionPrintFadeText(text, 2.0f)
             );
         }
     }

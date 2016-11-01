@@ -18,4 +18,8 @@ public class BallManager : MonoBehaviour {
     private void Awake () {
         StaticInstance = this;
     }
+
+    private void Start () {
+        Ball.ResetAndPositionAt(CurrentBall.transform.parent, CurrentBall, Vector3.zero);
+    }
 }

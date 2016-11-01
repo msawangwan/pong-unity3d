@@ -2,10 +2,12 @@
 
 namespace mStateFramework {
     public class StateCheckForRoundWin : State<Game> {
-        private readonly PlayerScorer scored; // todo: change to type
+        private readonly PlayerScorer scored;
 
+        private string text = string.Empty;
         private Game game = null;
-        private State<Game> next;
+        private State<Game> next = null;
+        private StateTransition<mUIFramework.Core.UI> transition = null;
 
         protected override bool isExecuting { get; set; }
 
@@ -25,6 +27,9 @@ namespace mStateFramework {
                     next = new StateHandleRoundWin (
                         new PlayerWinner (scored.Scorer, PlayerWinner.Type.Round)
                     );
+
+                    text = string.Format("ROUND WINNER: {0}", scored.ScorerPID);
+                    transition = new StateTransitionPrintFadeText(text, 2.0f);
                 } else {
                     next = new StateDesignateServingPlayer (
                         new PlayerServer (game.PlayerOne) // todo: should be scorer
@@ -41,7 +46,7 @@ namespace mStateFramework {
             return new StateContext<Game>(
                 game,
                 next,
-                null
+                transition
             );
         }
     }

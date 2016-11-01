@@ -18,12 +18,14 @@ public class PaddleServeController : MonoBehaviour {
 
     public bool Serve (Ball ball, Vector3 serveForce) { // TODO: IMPORTANT TO VERIFY WE DO NOT SERVE OFF SCREEN!!!
         if (ball != null) {
-            Rigidbody2D rb = ball.RB;
-            if (rb != null) {
+            if (ball.RB != null) {
                 ball.transform.SetParent (DynamicSceneGameObjectController.Container);
 
-                rb.isKinematic = false;
-                rb.AddForce(serveForce);
+                ball.RB.isKinematic = false;
+                ball.RB.AddForce(serveForce);
+
+                ball.TR.Clear ();
+                ball.TR.enabled = true;
 
                 return true;
             }

@@ -13,6 +13,7 @@ public class Ball : MonoBehaviour {
             return ball;
         }
     }
+
     public Rigidbody2D RB {
         get {
             if (rb == null) {
@@ -22,8 +23,21 @@ public class Ball : MonoBehaviour {
         }
     }
 
-    private Rigidbody2D rb = null;
+    public TrailRenderer TR {
+        get {
+            if (tr == null) {
+                tr = gameObject.GetComponentInChildren<TrailRenderer> ();
+                if (tr == null) {
+                    Debug.LogErrorFormat("problem: {0} couldn't find a trail renderer in its children", gameObject.name);
+                }
+            }
+            return tr;
+        }
+    }
+
     private Ball ball = null;
+    private Rigidbody2D rb = null;
+    private TrailRenderer tr = null;
 
     public State CurrentState { get; set; }
     public Player.PlayerID LastToHit { get; set; }
@@ -50,6 +64,9 @@ public class Ball : MonoBehaviour {
 
         ball.RB.isKinematic = true;
         ball.RB.velocity = Vector3.zero;
+
+        ball.TR.enabled = false;
+        ball.TR.Clear ();
 
         ball.transform.rotation = Quaternion.identity;
         ball.transform.position = restPosition;

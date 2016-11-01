@@ -5,8 +5,9 @@ namespace mStateFramework {
     public class StateWaitUntilPointScore : State<Game> {
         public static System.Func<Player.PlayerID> onScore { get; set; } // idea: make a static method of type 'player' or use a mediator
 
+        private string text = string.Empty;
         private PlayerScorer scorer = null;
-        private Game game;
+        private Game game = null;
 
         protected override bool isExecuting { get; set; }
 
@@ -27,6 +28,7 @@ namespace mStateFramework {
                 );
 
                 scorer = Player.ExtractScoringPlayer (query);
+                text = string.Format("POINT: {0}", scorer.ScorerPID);
 
                 onScore = null;
                 isExecuting = false;
@@ -41,7 +43,7 @@ namespace mStateFramework {
             return new StateContext<Game>(
                 game,
                 new StateHandlePointScore (scorer),
-                new StateTransitionPrintFadeText ("SCORE", 2.0f)
+                new StateTransitionPrintFadeText (text, 2.0f)
             );
         }
     }
