@@ -1,4 +1,5 @@
 ﻿using mUIFramework.Core;
+using mUIFramework.mvc;
 
 namespace mStateFramework {
 	public class StateTransitionPrintFadeText : StateTransition<UI> {
@@ -11,11 +12,11 @@ namespace mStateFramework {
         }
 
         protected override System.Collections.IEnumerable Transition() {
-            UIMasterCanvasController.SingletonInstance.PrintCenter(text);
+            UIMasterController.Singleton.CenterBanner.ShowText(text);
             yield 
                 return new UnityEngine.WaitForSeconds(duration);
-            yield 
-                return UIMasterCanvasController.SingletonInstance.CenterNotificationHUD.FadeThenDisable();
+            yield
+                return UIMasterController.Singleton.CenterBanner.Fade();
         }
 	}
 }

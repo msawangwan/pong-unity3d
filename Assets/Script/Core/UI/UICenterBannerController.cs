@@ -1,42 +1,20 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
+﻿namespace mUIFramework.mvc {
+    public class UICenterBannerController {
+        private UICenterBannerModelView centerBannerMV;
 
-[RequireComponent(typeof(CanvasGroup))]
-public class UICenterBannerController : MonoBehaviour {
-    public Text BannerText = null;
+        public UICenterBannerController(UICenterBannerModelView centerBannerMV) {
+            this.centerBannerMV = centerBannerMV;
+        }
 
-	public IEnumerator FireCenterScreenNotification (UICenterBannerController banner, string txt, float delay) {
-        banner.BannerText.text = txt;
-        yield return new WaitForEndOfFrame();
-        banner.gameObject.Enable();
-        yield return new WaitForSeconds(delay);
-        yield return StartCoroutine (FadeEnumerator.CanvasGroupToZero (gameObject));
-        banner.gameObject.Disable();
-    }
+        public bool ShowText (string text) {
+            centerBannerMV.SetTextAndEnable(text);
+            return true;
+        }
 
-    public GameObject SetTextAndEnable (GameObject section, Text field, string text) {
-        field.text = text;
-        section.Enable ();
-        return section;
-    }
-
-    public GameObject ClearTextAndDisable (GameObject section, Text field) {
-        section.Disable ();
-        field.text = "";
-        return section;
-    }
-
-    public IEnumerator FadeThenDisable () {
-        yield return FadeEnumerator.CanvasGroupToZero (gameObject);
-        gameObject.Disable();
-    }
-
-    private void Start () {
-		gameObject.Disable ();
-	}
-
-    private void OnDisable () {
-        gameObject.GetComponent<CanvasGroup>().alpha = 1.0f;
+        public System.Collections.IEnumerator Fade (float rate = 0.05f) {
+            yield return FadeEnumerator.CanvasGroupToZero(centerBannerMV.CenterBanner, rate);
+            centerBannerMV.CenterBanner.Disable ();
+            centerBannerMV.CanvasGrp.alpha = 1.0f; // reset alpha
+        }
     }
 }

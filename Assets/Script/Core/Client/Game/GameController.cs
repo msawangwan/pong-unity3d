@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
-using System;
 using mGameFramework;
 
 public class GameController : MonoBehaviour {
     public static GameController StaticInstance = null;
+
+    public  bool         OutputDebugToConsole  = false;
+
+    [SerializeField] private Game.GameParameters parameters     = null;
 
     public static int TickCounter {
         get {
@@ -17,13 +20,6 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    public  UIMasterCanvasController UI        = null;
-    public  bool         OutputDebugToConsole  = false;
-
-    [SerializeField]
-    private Game.GameParameters parameters     = null;
-
-
     public int PointsPerRound {
         get {
             return parameters.WinningScore.Value;
@@ -35,17 +31,6 @@ public class GameController : MonoBehaviour {
             return parameters.RequiredWins.Value;
         }
     }
-
-    // private void RegisterHandler () {
-    //     GlobalMediator.RaiseOnNewGameStarted += () => { state = -50; };
-
-    //     onIsIntervalPastTime = (timestamp) => {
-    //         if (Time.time > timestamp) {
-    //             return true;
-    //         }
-    //         return false;
-    //     };
-    // }
 
     private void Awake () {
         StaticInstance = this;

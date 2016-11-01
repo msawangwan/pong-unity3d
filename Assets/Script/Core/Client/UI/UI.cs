@@ -6,16 +6,6 @@
                 return UnityEngine.Time.time + DisplayTime;
             }
 		}
-
-        public UIMasterCanvasController controller { get; private set; }
-
-		public UI() {
-
-		}
-
-		public UI(UIMasterCanvasController controller) {
-            this.controller = controller;
-        }
     }
 }
 
