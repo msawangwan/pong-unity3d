@@ -222,6 +222,7 @@ public abstract class Paddle : MonoBehaviour {
     }
 
     private void Update () {
+        ServeController.CalcTheta();
         if (isInServePhase == true && isSetAsServing == true) {
             Debug.LogWarningFormat("[STATUS] Paddle: {0} in serve phase update loop", AssignedPlayer);
             if (serveState == 0) {
@@ -239,8 +240,10 @@ public abstract class Paddle : MonoBehaviour {
             if (serveState == 2) {
                 hasServed = ServeBall ();
                 if (hasServed == true) {
-                    Vector3 servePower = ServeController.CalculateServiceForce (this);
-                    bool served = ServeController.Serve (ball, servePower);
+                    Vector3 hMomentum = this.RB.velocity;
+                    Vector3 vMomentum = ServeController.CalcTheta();
+                    Vector3 bMomentum = new Vector3(hMomentum.x, vMomentum.y, 0.0f);
+                    bool served = ServeController.Serve (ball, bMomentum);
                     if (served) {
                         isSetAsServing = false;
                         isInServePhase = false;

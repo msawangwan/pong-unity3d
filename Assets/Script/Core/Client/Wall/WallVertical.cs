@@ -8,6 +8,7 @@ public class WallVertical : MonoBehaviour {
     public static List<WallVertical> Instances = new List<WallVertical>();
 
     public Vector3 Normal { get { return normal; } }
+    public float Height { get { return height; } }
 
     public Handedness ScreenEdge = WallVertical.Handedness.None; // should set in inspector rather than Start ()?
 
