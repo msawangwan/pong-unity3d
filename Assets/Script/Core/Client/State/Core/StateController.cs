@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
-using mGameFramework.Core;
-using mUIFramework.Core;
 using mExtensions.Common;
 
 namespace mStateFramework.Core {
-    public partial class StateController : MonoBehaviour {
+    public abstract class StateController<T> : MonoBehaviour {
         public enum Status : int {
             None = 0,
             Loading,
@@ -12,58 +10,60 @@ namespace mStateFramework.Core {
             Terminating,
         }
 
-        public enum Session : byte {
-            NotLoaded,
-            HasLoaded,
+        protected enum Initialised : byte {
+            True,
+            False,
         }
 
-        private StateController.Status controllerStatus = StateController.Status.None;
-        private StateController.Session session = StateController.Session.NotLoaded;
+        private StateController<T>.Status controllerStatus = StateController<T>.Status.None;
+        private StateController<T>.Initialised initialisedStatus = StateController<T>.Initialised.False;
 
-        private Game game = null; // context
+        private T context = default(T); // context
 
-        private IState<Game> current; // current state
-        private IState<Game> next; // queued state
+        private IState<T> current; // current state
+        private IState<T> next; // queued state
 
-        private IState<Game> initialised { // run queued state through a property prior
+        private IState<T> initialised { // run queued state through a property prior
             set {
                 current = value;
                 current.OnRaiseStateChanged += HandleOnStateChanged;
-                current.Enter (game);
+                current.Enter (context);
             }
         }
 
         private IStateTransition transition;
 
-        private void HandleOnStateChanged(IStateContext<Game> context) {
-            game = context.Context;
-            next = context.NextState;
-            transition = context.Transition;
+        protected abstract State<T> LoadNew (StateController<T>.Initialised initStatus);
+
+        private void HandleOnStateChanged(IStateContext<T> context) {
+            this.context = context.Context;
+            this.next = context.NextState;
+            this.transition = context.Transition;
         }
 
         private void Start () {
             GlobalMediator.RaiseOnNewGameStarted += 
-                () => controllerStatus = StateController.Status.Loading;
+                () => controllerStatus = StateController<T>.Status.Loading;
         }
 
         private void Update () {
             switch (controllerStatus) {
-                case StateController.Status.None:
+                case StateController<T>.Status.None:
                     return;
-                case StateController.Status.Loading:
-                    State<Game> newSession = LoadNew(session);
+                case StateController<T>.Status.Loading:
+                    State<T> newSession = LoadNew(initialisedStatus);
 
                     if (newSession.IsNull()) {
-                        session = StateController.Session.NotLoaded;
+                        initialisedStatus = StateController<T>.Initialised.False;
                         return;
                     }
 
                     initialised = newSession;
-                    session = StateController.Session.HasLoaded;
-                    controllerStatus = StateController.Status.Executing;
+                    initialisedStatus = StateController<T>.Initialised.True;
+                    controllerStatus = StateController<T>.Status.Executing;
 
                     return;
-                case StateController.Status.Executing:
+                case StateController<T>.Status.Executing:
                     if (transition.IsNull() && !current.hasCompletedExecution) {
                         current.Execute();
                         return;
@@ -72,7 +72,7 @@ namespace mStateFramework.Core {
                     current.OnRaiseStateChanged -= HandleOnStateChanged;
 
                     if (next.IsNull()) {
-                        controllerStatus = StateController.Status.Terminating;
+                        controllerStatus = StateController<T>.Status.Terminating;
                         return;
                     }
 
@@ -93,18 +93,19 @@ namespace mStateFramework.Core {
                     transition = null;
 
                     return;
-                case StateController.Status.Terminating:
+                case StateController<T>.Status.Terminating:
                     return;
                 default:
                     break;
             }
         }
 
-        private State<Game> LoadNew(StateController.Session sessionStatus) {
-            if (sessionStatus == StateController.Session.NotLoaded) {
-                return new StateSpawnNewSessionInstance();
-            }
-            return null;
-        }
+        // private State<T> LoadNew(StateController<T>.Session sessionStatus) {
+        //     if (sessionStatus == StateController<T>.Session.False) {
+        //         // return new StateSpawnNewSessionInstance();
+        //         return null;
+        //     }
+        //     return null;
+        // }
     }
 }
