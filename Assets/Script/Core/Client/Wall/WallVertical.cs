@@ -1,42 +1,65 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using mExtensions.Common;
 
 [RequireComponent(typeof(EdgeCollider2D))]
 public class WallVertical : MonoBehaviour {
-    public enum Handedness { None, Left, Right }
+    public enum Facing { 
+        None, 
+        Left, 
+        Right 
+    }
 
     public static List<WallVertical> Instances = new List<WallVertical>();
 
-    public Vector3 Normal { get { return normal; } }
-    public float Height { get { return height; } }
+    public Facing VerticalFacing               = WallVertical.Facing.None;
+   
+    public EdgeCollider2D EC {
+        get {
+            if (ec.IsNull()){
+                ec = gameObject.GetComponent<EdgeCollider2D>();
+            }
+            return ec;
+        }
+    }
 
-    public Handedness ScreenEdge = WallVertical.Handedness.None; // should set in inspector rather than Start ()?
+    public Bounds B {
+        get {
+            return EC.bounds;
+        }
+    }
 
-    private float xComponentTransform = 0.0f;
-    private Vector3 normal = Vector3.zero;
+    public Vector3 Orthogonal { 
+        get; 
+        private set; 
+    }
 
-    private float height { get { return Camera.main.orthographicSize * 2f; } }
+    public float Height { 
+        get { 
+            return B.size.y; 
+        } 
+    }
 
-    private void DetermineLeftOrRightHandedness () {
-        xComponentTransform = transform.position.x;
-        if (xComponentTransform > 0) {
-            normal = transform.position.FindNormal2DLeftHand();
-            ScreenEdge = Handedness.Right;
+    private EdgeCollider2D ec = null;
+
+    private Vector3 CalculateOrthogonal (WallVertical.Facing facing) {
+        if (facing == Facing.Left) {
+            return B.Orthogonal(ExtensionBounds.ScaleBy.Height);
         } else {
-            normal = transform.position.FindNormal2DRightHand();
-            ScreenEdge = Handedness.Left;
+            return B.Orthogonal(ExtensionBounds.ScaleBy.Height, false);
         }
     }
 
     private void Start () {
-        xComponentTransform = transform.position.x;
-        if (xComponentTransform > 0) {
-            normal = transform.position.FindNormal2DLeftHand();
-            ScreenEdge = Handedness.Right;
-        } else {
-            normal = transform.position.FindNormal2DRightHand();
-            ScreenEdge = Handedness.Left;
+        if (VerticalFacing == WallVertical.Facing.None) {
+            Debug.LogErrorFormat(gameObject, "{0} hasn't been assigned a facing!", gameObject.name);
         }
+
+        Orthogonal = CalculateOrthogonal (VerticalFacing);
+    }
+
+    private void Update() {
+        Debug.DrawRay(transform.position, Orthogonal * 0.1f, Color.red);
     }
 
     private void OnEnable () {

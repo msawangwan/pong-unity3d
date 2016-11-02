@@ -174,7 +174,7 @@ public abstract class Paddle : MonoBehaviour {
     protected abstract bool ServeBall ();
     protected abstract Vector3 CalculateHorizontalMoveForce (float paddleMoveSpeed);
 
-    protected virtual void NewGameInitialisation () {
+    private void NewGameInitialisation () {
         transform.position = Parameters.FixedHorizontalPosition.AsVectorComponenty ();
 
         Vector2[] colliderEndPoints = GetComponent<EdgeCollider2D> ().points;
@@ -225,6 +225,7 @@ public abstract class Paddle : MonoBehaviour {
         ServeController.CalcTheta();
         if (isInServePhase == true && isSetAsServing == true) {
             Debug.LogWarningFormat("[STATUS] Paddle: {0} in serve phase update loop", AssignedPlayer);
+
             if (serveState == 0) {
                 if (ball == null) {
                     ball = BallManager.StaticInstance.CurrentBall;
@@ -257,13 +258,22 @@ public abstract class Paddle : MonoBehaviour {
 
             return;
         } else {
-            colliderNormal = CalculateNormal (assignedPlayer);
             isInPlayPhase = true;
         }
 
         if (isInPlayPhase == true) {
-            if (playState == 0)  {
-                Debug.LogWarningFormat("[STATUS] Paddle: {0} in play phase update loop", AssignedPlayer);
+            Debug.LogWarningFormat("[STATUS] Paddle: {0} in play phase update loop", AssignedPlayer);
+
+            if (playState == 0)  { // states are temp
+                colliderNormal = CalculateNormal (assignedPlayer);
+                playState = 1;
+                return;
+            }
+
+            if (playState == 1) {
+                // Debug.DrawRay(transform.position, colliderNormal, Color.red);
+                // Debug.DrawRay(transform.position, transform.position.FindNormal2DLeftHand(), Color.red);
+                // Debug.DrawRay(transform.position, transform.position.FindNormal2DRightHand(), Color.green);
                 return;
             }
         }

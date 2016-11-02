@@ -43,7 +43,7 @@ public class Ball : MonoBehaviour {
     public Player.PlayerID LastToHit { get; set; }
 
     public Vector3 DeriveReflectionForce (Collision2D c, WallVertical w) {
-        return -2 * Vector3.Dot (c.relativeVelocity, w.Normal) * w.Normal; // [r = e - 2(dot(e,n)) * n][e = relative velocity][n = wall normal]
+        return -2 * Vector3.Dot (c.relativeVelocity, w.Orthogonal) * w.Orthogonal; // [r = e - 2(dot(e,n)) * n][e = relative velocity][n = wall normal]
     }
 
     public Vector3 DerivePaddleReflectionForce (Collision2D c, Paddle p) {
