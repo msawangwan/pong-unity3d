@@ -74,6 +74,7 @@ public class PaddleServeController : MonoBehaviour {
         Debug.DrawRay(paddle.transform.position, leftHypot);
         Debug.DrawRay(paddle.transform.position, rightHypot);
         // Vector3
+        Debug.DrawLine(paddle.transform.position, Vector3.zero, Color.green, 0.01f);
         return leftHypot;
     }
 }

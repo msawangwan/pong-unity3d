@@ -242,7 +242,9 @@ public abstract class Paddle : MonoBehaviour {
                 if (hasServed == true) {
                     Vector3 hMomentum = this.RB.velocity;
                     Vector3 vMomentum = ServeController.CalcTheta();
-                    Vector3 bMomentum = new Vector3(hMomentum.x, vMomentum.y, 0.0f);
+                    // Vector3 bMomentum = new Vector3(hMomentum.x, vMomentum.y, 0.0f);
+                    // Vector3 bMomentum = new Vector3(vMomentum.x, vMomentum.y, 0.0f);
+                    Vector3 bMomentum = new Vector3(vMomentum.x+hMomentum.x, vMomentum.y, 0.0f);
                     bool served = ServeController.Serve (ball, bMomentum);
                     if (served) {
                         isSetAsServing = false;
