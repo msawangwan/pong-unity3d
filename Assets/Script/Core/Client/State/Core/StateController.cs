@@ -20,10 +20,10 @@ namespace mStateFramework.Core {
 
         private T context = default(T); // context
 
-        private IState<T> current; // current state
-        private IState<T> next; // queued state
+        private IState<T> current;      // current state
+        private IState<T> next;         // queued state
 
-        private IState<T> initialised { // run queued state through a property prior
+        private IState<T> initialised { // validates queued state prior to current = next
             set {
                 current = value;
                 current.OnRaiseStateChanged += HandleOnStateChanged;
@@ -33,7 +33,13 @@ namespace mStateFramework.Core {
 
         private IStateTransition transition;
 
+        protected abstract bool debug_startOnButtonPress { get; }
+        protected abstract StateController<T>.Status SetStatus();
         protected abstract State<T> LoadNew (StateController<T>.Initialised initStatus);
+
+        public bool SetStatusToLoading () {
+            return false;
+        }
 
         private void HandleOnStateChanged(IStateContext<T> context) {
             this.context = context.Context;
@@ -42,8 +48,10 @@ namespace mStateFramework.Core {
         }
 
         private void Start () {
-            GlobalMediator.RaiseOnNewGameStarted += 
-                () => controllerStatus = StateController<T>.Status.Loading;
+            if (debug_startOnButtonPress) {
+                GlobalMediator.RaiseOnNewGameStarted += 
+                    () => controllerStatus = StateController<T>.Status.Loading;
+            }
         }
 
         private void Update () {
