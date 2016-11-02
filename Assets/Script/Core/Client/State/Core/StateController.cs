@@ -99,13 +99,5 @@ namespace mStateFramework.Core {
                     break;
             }
         }
-
-        // private State<T> LoadNew(StateController<T>.Session sessionStatus) {
-        //     if (sessionStatus == StateController<T>.Session.False) {
-        //         // return new StateSpawnNewSessionInstance();
-        //         return null;
-        //     }
-        //     return null;
-        // }
     }
 }
