@@ -7,8 +7,8 @@ public static class ExtensionBounds {
         Height,
     }
 
-    public static Vector3 OrthogonalNormalized (this Bounds b, bool leftFacing=true) {
-        if (leftFacing) {
+    public static Vector3 OrthogonalNormalizedOf (this Bounds b, bool rightFacing=true) {
+        if (rightFacing) {
             return (b.min - b.max).FindNormal2DLeftHand().normalized;
         } else {
             return (b.min - b.max).FindNormal2DRightHand().normalized;
@@ -16,7 +16,7 @@ public static class ExtensionBounds {
     }
 
     /* scales by |v| * 1/2  */
-    public static Vector3 Orthogonal (this Bounds b, ExtensionBounds.ScaleBy s,bool leftFacing=true) {
+    public static Vector3 OrthogonalOf (this Bounds b, ExtensionBounds.ScaleBy s,bool rightFacing=true) {
         float scalar = 0.0f;
 
         if (s == ExtensionBounds.ScaleBy.Width) {
@@ -25,7 +25,7 @@ public static class ExtensionBounds {
             scalar = b.extents.y;
         }
 
-        if (leftFacing) {
+        if (rightFacing) {
             return (b.min - b.max).FindNormal2DLeftHand().normalized * scalar;
         } else {
             return (b.min - b.max).FindNormal2DRightHand().normalized * scalar;

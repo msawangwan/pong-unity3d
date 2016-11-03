@@ -48,9 +48,9 @@ namespace mUnityFramework.Pong {
 
         private Vector3 CalculateOrthogonal (PaddleSurface.ScreenLocation location) {
             if (location == PaddleSurface.ScreenLocation.Top) {
-                return B.Orthogonal(ExtensionBounds.ScaleBy.Width);
+                return B.OrthogonalOf(ExtensionBounds.ScaleBy.Width);
             } else {
-                return B.Orthogonal(ExtensionBounds.ScaleBy.Width, false);
+                return B.OrthogonalOf(ExtensionBounds.ScaleBy.Width, false);
             }
         }
 
