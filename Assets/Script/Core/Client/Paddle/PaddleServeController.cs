@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class PaddleServeController : MonoBehaviour {
     private Paddle paddleCached = null;
@@ -53,10 +54,11 @@ public class PaddleServeController : MonoBehaviour {
     }
 
     public Vector3 CalcTheta() { // SKETCHING IDEAS
-        EdgeCollider2D wallcol = WallVertical.Instances[0].GetComponent<EdgeCollider2D>();
+        List<WallSurface> ws = WallSurface.Verticals as List<WallSurface>;
+        EdgeCollider2D wallcol = ws[0].GetComponent<EdgeCollider2D>();
         float wallMidpoint = wallcol.points[1].y + wallcol.points[0].y;
-        float xLeftWall = WallVertical.Instances[0].transform.position.x;
-        float xRightWall = WallVertical.Instances[1].transform.position.x;
+        float xLeftWall = ws[0].transform.position.x;
+        float xRightWall = ws[1].transform.position.x;
         float paddleMidpoint = paddle.ColliderMidpoint;
         float xPaddle = paddle.transform.position.x;
         Vector3 leftWallMidpoint = new Vector3(xLeftWall, wallMidpoint, 0.0f);
