@@ -3254,7 +3254,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ccaf5fd7d45464e9110165ff7001fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VerticalFacing: 1
+  debugDrawGizmosInScene: 1
+  alignedAxis: 2
+  frontFace: 2
 --- !u!50 &1187578386
 Rigidbody2D:
   serializedVersion: 2
@@ -5144,7 +5146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ccaf5fd7d45464e9110165ff7001fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VerticalFacing: 2
+  debugDrawGizmosInScene: 1
+  alignedAxis: 2
+  frontFace: 1
 --- !u!50 &1762424794
 Rigidbody2D:
   serializedVersion: 2
