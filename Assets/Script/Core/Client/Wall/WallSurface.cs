@@ -55,9 +55,32 @@ public abstract class WallSurface : MonoBehaviour {
 
     public Vector3 Orthogonal { 
         get; 
-        protected set; 
+        private set; 
     }
 
+    public float hMidpoint {
+        get {
+            return B.size.x / 2.0f; // todo: what about .extents?
+        }
+    }
+
+    public float vMidpoint {
+        get {
+            return B.size.y / 2.0f; // todo: what about .extents?
+        }
+    }
+
+    public float Width {
+        get {
+            return B.size.x;
+        }
+    }
+
+    public float Height {
+        get {
+            return B.size.y;
+        }
+    }
 
     public static IEnumerable<WallSurface> Horizontals {
         get {
@@ -81,7 +104,7 @@ public abstract class WallSurface : MonoBehaviour {
         }
     }
 
-    protected Vector3 CalculateOrthogonal (WallSurface.AxisAlignment axis, WallSurface.Facing facing) {
+    private Vector3 CalculateOrthogonal (WallSurface.AxisAlignment axis, WallSurface.Facing facing) {
         ExtensionBounds.ScaleBy originalAxis = ExtensionBounds.ScaleBy.Height;
         bool facingLeft = false;
 

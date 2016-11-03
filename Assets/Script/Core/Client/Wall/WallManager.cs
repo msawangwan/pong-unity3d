@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public class WallManager : MonoBehaviour {
     public static WallManager StaticInstance = null;
 
-	/* calculate the wrap threshold x value of the left and right screen borders, represented by the left and right walls and adjust based on the paddle length  */
+    public Func<Player.PlayerID> onBallEnteredScoreZone { get; set; }
+
     public static float[] CalculateVerticalLeftAndRightWrapBounds (float paddleColliderLength) {
         List<WallSurface> ws = WallSurface.Verticals as List<WallSurface>;
 
@@ -21,6 +23,12 @@ public class WallManager : MonoBehaviour {
         xComponentRightWallPositionAdjusted += paddleColliderLength;
 
         return new float[] { xComponentLeftWallPositionAdjusted, xComponentRightWallPositionAdjusted };
+    }
+
+    public static void BallEnteredScoreZone(Player.PlayerID attackingPlayerPID) {
+        mStateFramework.Core.StateWaitUntilPointScore.onScore = () => {
+            return attackingPlayerPID;
+        };
     }
 
 	private void Awake () {

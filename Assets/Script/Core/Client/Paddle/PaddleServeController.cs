@@ -53,6 +53,19 @@ public class PaddleServeController : MonoBehaviour {
         return false;
     }
 
+    public Vector3 Tether() { // TEMP FUNCTION, MOVE ELSE WHERE??
+        Debug.Log(gameObject.name + " " +  Time.time);
+        Vector3 root = Vector3.zero;
+        List<WallSurface> ws = WallSurface.Horizontals as List<WallSurface>;
+        foreach (WallSurface wall in ws) {
+            if (wall.GetComponent<WallScoreZone>().DefendingPlayer == paddle.AssignedPlayer) {
+                Debug.Log("assigned " + paddle.AssignedPlayer + " to  " + wall.name);
+                return wall.transform.position;
+            }
+        }
+        return root;
+    }
+
     public Vector3 CalcTheta() { // SKETCHING IDEAS
         List<WallSurface> ws = WallSurface.Verticals as List<WallSurface>;
         EdgeCollider2D wallcol = ws[0].GetComponent<EdgeCollider2D>();
@@ -66,7 +79,6 @@ public class PaddleServeController : MonoBehaviour {
         Vector3 leftWallBasepoint = new Vector3(xLeftWall, paddle.transform.position.y, 0.0f);
         Vector3 rightWallBasepoint = new Vector3(xRightWall, paddle.transform.position.y, 0.0f);
         Vector3 p = new Vector3(xPaddle, paddle.transform.position.y, 0);
-        Debug.Log("calc theta");
         // Debug.DrawLine(p, leftWallMidpoint, Color.red);
         // Debug.DrawLine(p, leftWallBasepoint, Color.yellow);
         // Debug.DrawLine(p, rightWallMidpoint, Color.red);
@@ -78,5 +90,15 @@ public class PaddleServeController : MonoBehaviour {
         // Vector3
         Debug.DrawLine(paddle.transform.position, Vector3.zero, Color.green, 0.01f);
         return leftHypot;
+    }
+
+    Vector3 tetherBase;
+
+    private void OnEnable () {
+        tetherBase = Tether();
+    }
+
+    private void Update() {
+        Debug.DrawLine(tetherBase, paddle.transform.position, Color.magenta);
     }
 }
