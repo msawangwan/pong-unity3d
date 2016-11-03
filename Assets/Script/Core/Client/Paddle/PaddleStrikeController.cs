@@ -15,9 +15,8 @@ public class PaddleStrikeController : MonoBehaviour {
 
         if (ball != null) {
             player = paddle.AssignedPlayer;
-            c.rigidbody.velocity = ball.CalculateEnglish (player, ball.transform.position, transform.position, paddle.ColliderLength);
-            // Vector3 reflectionForce = ball.DerivePaddleReflectionForce (c, paddle);
-            // ball.RB.AddForce (reflectionForce);
+            Vector3 f = ball.CalculateEnglish (player, ball.transform.position, transform.position, paddle.ColliderLength);
+            ball.RB.AddForce(f);
             ball.LastToHit = player;
 
             RaiseOnStruckBall = () => { 

@@ -20,10 +20,12 @@ namespace mStateFramework.Core {
         public override void Execute () {
             if (isExecuting) {
                 foreach (Player p in game.Players) {
-                    p.AssignedPaddle.ChangePhaseToServe();
-                    if (p.PID == serving.ServerPID) {
-                        p.AssignedPaddle.IsSetAsServing = true;
-                        text = string.Format("SERVER: {0}", serving.ServerPID);
+                    if (p.AssignedPaddle != null) {
+                        p.AssignedPaddle.ChangePhaseToServe();
+                        if (p.PID == serving.ServerPID) {
+                            p.AssignedPaddle.IsSetAsServing = true;
+                            text = string.Format("SERVER: {0}", serving.ServerPID);
+                        }
                     }
                 }
 

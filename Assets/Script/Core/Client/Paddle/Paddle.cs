@@ -16,6 +16,7 @@ public abstract class Paddle : MonoBehaviour {
         [RangeAttribute(00.01f, 100.00f)]
         public float  HorizontalMoveForceMultiplier  = 3.0f;
         public float  FixedHorizontalPosition        = 0.0f; // y position
+        public float  MaximumHorizontalMoveForce = 10.0f;
     }
 
     public enum PaddleID : int { 
@@ -222,7 +223,6 @@ public abstract class Paddle : MonoBehaviour {
     }
 
     private void Update () {
-        ServeController.CalcTheta();
         if (isInServePhase == true && isSetAsServing == true) {
             Debug.LogWarningFormat("[STATUS] Paddle: {0} in serve phase update loop", AssignedPlayer);
 
@@ -241,12 +241,8 @@ public abstract class Paddle : MonoBehaviour {
             if (serveState == 2) {
                 hasServed = ServeBall ();
                 if (hasServed == true) {
-                    Vector3 hMomentum = this.RB.velocity;
-                    Vector3 vMomentum = ServeController.CalcTheta();
-                    // Vector3 bMomentum = new Vector3(hMomentum.x, vMomentum.y, 0.0f);
-                    // Vector3 bMomentum = new Vector3(vMomentum.x, vMomentum.y, 0.0f);
-                    Vector3 bMomentum = new Vector3(vMomentum.x+hMomentum.x, vMomentum.y, 0.0f);
-                    bool served = ServeController.Serve (ball, bMomentum);
+                    Vector3 serveForce = ServeController.ServeForce ();
+                    bool served = ServeController.Serve (ball, serveForce);
                     if (served) {
                         isSetAsServing = false;
                         isInServePhase = false;
@@ -271,16 +267,13 @@ public abstract class Paddle : MonoBehaviour {
             }
 
             if (playState == 1) {
-                // Debug.DrawRay(transform.position, colliderNormal, Color.red);
-                // Debug.DrawRay(transform.position, transform.position.FindNormal2DLeftHand(), Color.red);
-                // Debug.DrawRay(transform.position, transform.position.FindNormal2DRightHand(), Color.green);
                 return;
             }
         }
     }
 
     private void FixedUpdate () {
-        hMoveForce = CalculateHorizontalMoveForce (hForceMultiplier);
+        hMoveForce = CalculateHorizontalMoveForce(hForceMultiplier).Truncate(Parameters.MaximumHorizontalMoveForce);
         rb.AddForce (hMoveForce);
 
         transform.position = WrapPositionIfOffScreen (transform.position.x);

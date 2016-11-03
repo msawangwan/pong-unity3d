@@ -13,7 +13,9 @@ namespace mStateFramework.Core {
         public override void Execute () {
             if (isExecuting) {
                 foreach (Player p in game.Players) {
-                    p.AssignedPaddle.EnableOnlyIfInactive ();
+                    if (p.AssignedPaddle != null) {
+                        p.AssignedPaddle.EnableOnlyIfInactive ();
+                    }
                 }
                 isExecuting = false;
             } else {

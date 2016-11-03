@@ -965,6 +965,7 @@ MonoBehaviour:
     PID: 2
     HorizontalMoveForceMultiplier: 55
     FixedHorizontalPosition: 3.8
+    MaximumHorizontalMoveForce: 10
   AIResponseTimeMultiplier: 0.245
 --- !u!114 &239600163
 MonoBehaviour:
@@ -3701,6 +3702,7 @@ MonoBehaviour:
     PID: 1
     HorizontalMoveForceMultiplier: 30
     FixedHorizontalPosition: -3.8
+    MaximumHorizontalMoveForce: 10
 --- !u!114 &1326286321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4486,7 +4488,7 @@ MonoBehaviour:
   OutputDebugToConsole: 0
   parameters:
     winningScore:
-      assignedValue: 3
+      assignedValue: 9
     requiredWins:
       assignedValue: 1
 --- !u!1 &1610053936
