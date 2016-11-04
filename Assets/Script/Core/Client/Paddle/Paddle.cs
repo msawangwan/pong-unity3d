@@ -24,10 +24,18 @@ namespace mUnityFramework.Pong {
         public enum PaddleID : int { 
             None = 0,
             Bottom, 
-            Top 
+            Top,
         }
 
-        public enum GameState : int { None, Menu, Enter, Idle, Serve, Play, Exit }
+        public enum GameState : int { 
+            None = 0,
+            Menu,
+            Enter, 
+            Idle,
+            Serve, 
+            Play, 
+            Exit,
+        }
 
         private static List<Paddle>      instances        = new List<Paddle>();
         public static IEnumerable<Paddle> Instances { get { return instances; } }
@@ -71,6 +79,9 @@ namespace mUnityFramework.Pong {
 
         public Rigidbody2D RB {
             get {
+                if (rb == null) {
+                    rb = gameObject.GetComponent<Rigidbody2D> ();
+                }
                 return rb;
             }
         }
@@ -80,14 +91,14 @@ namespace mUnityFramework.Pong {
                 if (tr == null) {
                     tr = gameObject.GetComponentInChildren<TrailRenderer> ();
                     if (tr == null) {
-                        Debug.LogErrorFormat("problem: {0} couldn't find a trail renderer in its children", gameObject.name);
+                        err (gameObject.name + ": null trail renderer");
                     }
                 }
                 return tr;
             }
         }
 
-        public Vector3 ColliderNormal {
+        public Vector3 ColliderOrthogonal {
             get {
                 return Surface.Orthogonal;
             }
@@ -109,6 +120,9 @@ namespace mUnityFramework.Pong {
 
         protected const string                 kHAxis           = "Horizontal";
 
+        protected       System.Action<string>  log              = (msg) => Debug.LogFormat ("[info][paddle] {0}", msg);
+        protected       System.Action<string>  err              = (msg) => Debug.LogErrorFormat ("[error][paddle] {0}", msg);
+
         protected       Player.PlayerID        assignedPlayer   = Player.PlayerID.None;
         protected       Ball                   ball             = null;
 
@@ -125,7 +139,6 @@ namespace mUnityFramework.Pong {
         private         bool                   isInPlayPhase    = false;
         private         bool                   isSetAsServing   = false;
         private         bool                   hasServed        = false;
-        private         Vector3                hMoveForce       = Vector3.zero;
 
         public float LeftSideScreenBoundry { 
             get {
@@ -184,16 +197,6 @@ namespace mUnityFramework.Pong {
         protected abstract bool ServeBall ();
         protected abstract Vector3 CalculateHorizontalMoveForce (float paddleMoveSpeed);
 
-        private void NewGameInitialisation () {
-            transform.position = Parameters.FixedHorizontalPosition.AsVectorComponenty ();
-
-            float[] wallBounds = WallManager.CalculateVerticalLeftAndRightWrapBounds (ColliderLength);
-            xLeftWrapBound = wallBounds[0];
-            xRightWrapBound = wallBounds[1];
-
-            rb = GetComponent<Rigidbody2D> ();
-        }
-
         private Vector3 WrapPositionIfOffScreen (float xComponentCurrentPosition) {
             float xInverted = xComponentCurrentPosition * -1.0f; // sign flip
             if ((xComponentCurrentPosition - ColliderMidpoint) < xLeftWrapBound) {
@@ -212,12 +215,14 @@ namespace mUnityFramework.Pong {
         }
 
         private void Start () {
-            NewGameInitialisation ();
+            float[] wallBounds = WallManager.CalculateVerticalLeftAndRightWrapBounds (ColliderLength);
+            xLeftWrapBound = wallBounds[0];
+            xRightWrapBound = wallBounds[1];
         }
 
         private void Update () {
             if (isInServePhase == true && isSetAsServing == true) {
-                Debug.LogWarningFormat("[STATUS] Paddle: {0} in serve phase update loop", AssignedPlayer);
+                log(string.Format("{0} in serve phase loop", AssignedPlayer));
 
                 if (serveState == 0) {
                     if (ball == null) {
@@ -227,15 +232,18 @@ namespace mUnityFramework.Pong {
                 }
 
                 if (serveState == 1) {
-                    ServeController.SetForService(this, ball);
+                    ServeController.SetForService (this, ball);
                     serveState = 2;
                 }
 
                 if (serveState == 2) {
                     hasServed = ServeBall ();
                     if (hasServed == true) {
-                        Vector3 serveForce = ServeController.ServeForce ();
-                        bool served = ServeController.Serve (ball, serveForce);
+                        bool served = ServeController.Serve (
+                            ball, 
+                            ServeController.ServeForce ()
+                        );
+
                         if (served) {
                             isSetAsServing = false;
                             isInServePhase = false;
@@ -251,9 +259,9 @@ namespace mUnityFramework.Pong {
             }
 
             if (isInPlayPhase == true) {
-                Debug.LogWarningFormat("[STATUS] Paddle: {0} in play phase update loop", AssignedPlayer);
+                log(string.Format("{0} in play phase loop", AssignedPlayer));
 
-                if (playState == 0)  { // todo: int states are temp
+                if (playState == 0)  {
                     playState = 1;
                     return;
                 }
@@ -265,10 +273,12 @@ namespace mUnityFramework.Pong {
         }
 
         private void FixedUpdate () {
-            hMoveForce = CalculateHorizontalMoveForce(hForceMultiplier).Truncate(Parameters.MaximumHorizontalMoveForce);
-            rb.AddForce (hMoveForce);
-
+            RB.AddForce(CalculateHorizontalMoveForce(hForceMultiplier).Truncate(Parameters.MaximumHorizontalMoveForce));
             transform.position = WrapPositionIfOffScreen (transform.position.x);
+        }
+
+        private void OnEnable () {
+            transform.position = Parameters.FixedHorizontalPosition.AsVectorComponenty ();
         }
     }
 }

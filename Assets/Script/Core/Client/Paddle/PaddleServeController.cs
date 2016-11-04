@@ -1,19 +1,14 @@
 ﻿using UnityEngine;
 
 namespace mUnityFramework.Pong {
-    public class PaddleServeController : MonoBehaviour {
-        private Paddle paddleCached = null;
-        private Paddle paddle {
-            get {
-                if (paddleCached == null) {
-                    paddleCached = gameObject.GetComponent<Paddle>();
-                }
-                return paddleCached;
-            }
-        }
-
+    public class PaddleServeController : PaddleComponent {
         public Vector3 ServeForce (float powerScalar = 1.0f, float steepness = 5.0f) {
             return new Vector3 (paddle.RB.velocity.x * powerScalar, steepness, 0f);
+        }
+
+        public bool IsOutOfBounds (float xPos) { // idea: use a fixed trigger area instead of calculating the bounds to check if player is on screen when serving
+            return ((xPos - paddle.ColliderLength) <= paddle.LeftSideScreenBoundry) || 
+                ((xPos + paddle.ColliderLength) >= paddle.RightSideScreenBoundry);
         }
 
         public bool SetForService (Paddle server, Ball ball, float offset = 0.3f) {
@@ -26,32 +21,22 @@ namespace mUnityFramework.Pong {
             return false;
         }
 
-        public bool IsInBounds (float xPos) {
-            return 
-                ((xPos - paddle.ColliderLength) <= paddle.LeftSideScreenBoundry) || 
-                ((xPos + paddle.ColliderLength) >= paddle.RightSideScreenBoundry);
-        }
-
-        public bool Serve (Ball ball, Vector3 momentumForce) { // idea: use a fixed trigger area instead of calculating the bounds to check if player is on screen when serving
+        public bool Serve (Ball ball, Vector3 momentumForce) {
             if (ball != null) {
-                if (IsInBounds (paddle.transform.position.x)) {
-                    return false;
-                } else {
+                if (!IsOutOfBounds (paddle.transform.position.x)) {
                     ball.transform.SetParent (DynamicSceneGameObjectController.Container);
-
-                    Debug.DrawRay (transform.position, momentumForce, Color.cyan, 5.0f);
-
                     ball.RB.isKinematic = false;
-                    // ball.ApplyForce (momentumForce, true);
-                    ball.RB.velocity = momentumForce;
-                    // ball.ApplyForce (momentumForce);
+
+                    Ball.SetVelocityOf (ball, momentumForce);
 
                     ball.TR.Clear ();
                     ball.TR.enabled = true;
 
+                    Debug.DrawRay (transform.position, momentumForce, Color.cyan, 5.0f);
+
                     return true;
                 }
-            }     
+            }
             return false;
         }
     }
