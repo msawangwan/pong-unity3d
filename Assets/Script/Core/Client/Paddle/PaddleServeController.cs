@@ -39,10 +39,11 @@ namespace mUnityFramework.Pong {
                 } else {
                     ball.transform.SetParent (DynamicSceneGameObjectController.Container);
 
-                    // Debug.DrawRay (transform.position, momentumForce, Color.cyan, 5.0f);
+                    Debug.DrawRay (transform.position, momentumForce, Color.cyan, 5.0f);
 
                     ball.RB.isKinematic = false;
-                    ball.ApplyForce (momentumForce, true);
+                    // ball.ApplyForce (momentumForce, true);
+                    ball.RB.velocity = momentumForce;
                     // ball.ApplyForce (momentumForce);
 
                     ball.TR.Clear ();

@@ -11,7 +11,8 @@ namespace mUnityFramework.Pong {
                 player = paddle.AssignedPlayer;
                 Vector3 f = ball.DerivePaddleReflectionForce(c, paddle);
 
-                ball.ApplyForce(f);
+                ball.RB.velocity = f;
+                // ball.ApplyForce(f);
                 ball.LastToHit = player;
 
                 Debug.DrawRay(paddle.transform.position, f, Color.red, 3.0f);

@@ -55,26 +55,26 @@ namespace mUnityFramework.Pong {
             return ((Vector3) c.relativeVelocity - (2 * Vector3.Dot (c.relativeVelocity, p.ColliderNormal) *  p.ColliderNormal)) * -1f; // [r = e - 2(dot(e,n)) * n][e = relative velocity][n = wall normal]
         }
 
-        public void ApplyForce (Vector3 f, bool isImpulse = false) {
-            if (isImpulse) {
-                Balll.RB.AddForce (f, ForceMode2D.Impulse);
-            }
-        }
+        // public void ApplyForce (Vector3 f, bool isImpulse = false) {
+        //     if (isImpulse) {
+        //         Balll.RB.AddForce (f, ForceMode2D.Impulse);
+        //     }
+        // }
 
-        Vector3 a;
+        // Vector3 a;
 
-        private void FixedUpdate () {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, 0.5f);
-            if (hit.collider != null) {
-                Debug.Log("hit " + hit.transform.gameObject.name);
-                Vector3 approach = (Vector3)hit.point - transform.position;
-                Vector3 refl = Vector3.Reflect(approach, hit.normal);
-                Debug.DrawRay(hit.point, refl, Color.cyan, 5.0f);
-                a = refl;
-            }
-            RB.AddForce(a);
-            Debug.Log(a);
-        }
+        // private void FixedUpdate () {
+        //     RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, 0.5f);
+        //     if (hit.collider != null) {
+        //         Debug.Log("hit " + hit.transform.gameObject.name);
+        //         Vector3 approach = (Vector3)hit.point - transform.position;
+        //         Vector3 refl = Vector3.Reflect(approach, hit.normal);
+        //         Debug.DrawRay(hit.point, refl, Color.cyan, 5.0f);
+        //         a = refl;
+        //     }
+        //     RB.AddForce(a);
+        //     Debug.Log(a);
+        // }
 
         public static void ResetAndPositionAt (Transform parent, Ball ball, Vector3 restPosition) {
             ball.gameObject.SetActive (false);
