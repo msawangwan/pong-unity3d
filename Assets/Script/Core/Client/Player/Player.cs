@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using mUnityFramework.Pong;
 
 [System.Serializable]
 public class Player {

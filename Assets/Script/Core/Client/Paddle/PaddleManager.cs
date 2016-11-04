@@ -1,23 +1,25 @@
 ﻿using UnityEngine;
 
-public class PaddleManager : MonoBehaviour {
-    public static PaddleManager StaticInstance = null;
+namespace mUnityFramework.Pong {
+    public class PaddleManager : MonoBehaviour {
+        public static PaddleManager StaticInstance = null;
 
-    public Paddle[] Paddles = new Paddle[ConstNumerical.Gameplay.PaddleCountMaximum];
+        public Paddle[] Paddles = new Paddle[ConstNumerical.Gameplay.PaddleCountMaximum];
 
-    public static Paddle[] SetAllPaddleActiveState (Paddle[] paddles, bool isActive) {
-        Paddle[] allPaddles = new Paddle[] { paddles [0], paddles [1] };
-        foreach (Paddle paddle in allPaddles) {
-            paddle.gameObject.SetActive(isActive);
+        public static Paddle[] SetAllPaddleActiveState (Paddle[] paddles, bool isActive) {
+            Paddle[] allPaddles = new Paddle[] { paddles [0], paddles [1] };
+            foreach (Paddle paddle in allPaddles) {
+                paddle.gameObject.SetActive(isActive);
+            }
+            return allPaddles;
         }
-        return allPaddles;
-    }
 
-    private void Awake () {
-        StaticInstance = this;
-    }
+        private void Awake () {
+            StaticInstance = this;
+        }
 
-    private void Start () {
-        PaddleManager.SetAllPaddleActiveState (Paddles, false);
+        private void Start () {
+            PaddleManager.SetAllPaddleActiveState (Paddles, false);
+        }
     }
 }

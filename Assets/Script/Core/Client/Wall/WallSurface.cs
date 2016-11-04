@@ -104,19 +104,11 @@ public abstract class WallSurface : MonoBehaviour {
         }
     }
 
-    private Vector3 CalculateOrthogonal (WallSurface.AxisAlignment axis, WallSurface.Facing facing) {
-        ExtensionBounds.ScaleBy originalAxis = ExtensionBounds.ScaleBy.Height;
-        bool facingLeft = false;
-
-        if (axis == WallSurface.AxisAlignment.Horizontal) {
-            originalAxis = ExtensionBounds.ScaleBy.Width;
-        }
-
+    private Vector3 CalculateOrthogonal (WallSurface.Facing facing) {
         if (facing == WallSurface.Facing.Right) {
-            facingLeft = true;
+            return B.OrthogonalNormalizedOf(true);
         }
-
-        return B.OrthogonalOf(originalAxis, facingLeft);
+        return B.OrthogonalNormalizedOf(false);
     }
 
     public List<WallSurface> GetInstances {
@@ -139,12 +131,12 @@ public abstract class WallSurface : MonoBehaviour {
             Debug.LogErrorFormat(gameObject, "{0} hasn't been assigned a facing!", gameObject.name);
         }
 
-        Orthogonal = CalculateOrthogonal (AlignedAxis, FrontFace);
+        Orthogonal = CalculateOrthogonal (FrontFace);
     }
 
     private void Update () {
         if (debugDrawGizmosInScene) {
-            Debug.DrawRay(transform.position, Orthogonal * 0.1f, Color.red);
+            Debug.DrawRay(transform.position, Orthogonal, Color.red);
         }
     }
 
@@ -153,7 +145,6 @@ public abstract class WallSurface : MonoBehaviour {
         if (!hs.Contains(this)) {
             hs.Add(this);
             instances[AlignedAxis] = hs;
-            Debug.LogFormat(gameObject, "{0} was added to the wall instance list", gameObject.name);
         }
     }
 
@@ -162,7 +153,6 @@ public abstract class WallSurface : MonoBehaviour {
         if (hs.Contains(this)) {
             hs.Remove(this);
             instances[AlignedAxis] = hs;
-            Debug.LogFormat(gameObject, "{0} was removed from the wall instance list", gameObject.name);
         }
     }
 }

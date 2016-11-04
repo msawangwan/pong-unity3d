@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using mUnityFramework.Pong;
 
 [RequireComponent (typeof (EdgeCollider2D))]
 public class WallScoreZone : MonoBehaviour {

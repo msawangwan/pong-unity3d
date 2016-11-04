@@ -1,22 +1,24 @@
 ﻿using UnityEngine;
 
-public class PaddleHuman : Paddle {
-    protected override bool ServeBall () {
-        if (Input.GetKeyDown (KeyCode.Space)) {
-            return true;
-        }
-        return false;
-    }
-
-    protected override Vector3 CalculateHorizontalMoveForce (float paddleMoveSpeed) {
-        if (Input.GetKey(KeyCode.LeftArrow)) {
-            return (Vector3.left * paddleMoveSpeed);
+namespace mUnityFramework.Pong {
+    public class PaddleHuman : Paddle {
+        protected override bool ServeBall () {
+            if (Input.GetKeyDown (KeyCode.Space)) {
+                return true;
+            }
+            return false;
         }
 
-        if (Input.GetKey(KeyCode.RightArrow)) {
-            return (Vector3.right * paddleMoveSpeed);
-        }
+        protected override Vector3 CalculateHorizontalMoveForce (float paddleMoveSpeed) {
+            if (Input.GetKey(KeyCode.LeftArrow)) {
+                return (Vector3.left * paddleMoveSpeed);
+            }
 
-        return Vector3.zero;
+            if (Input.GetKey(KeyCode.RightArrow)) {
+                return (Vector3.right * paddleMoveSpeed);
+            }
+
+            return Vector3.zero;
+        }
     }
 }

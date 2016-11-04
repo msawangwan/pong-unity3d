@@ -1,29 +1,21 @@
 ﻿using UnityEngine;
 
-public class PaddleStrikeController : MonoBehaviour {
-    public System.Action RaiseOnStruckBall { get; set; }
+namespace mUnityFramework.Pong {
+    public class PaddleStrikeController : PaddleComponent {
+        private Player.PlayerID player = Player.PlayerID.None;
 
-    private Paddle paddle = null;
-    private Player.PlayerID player = Player.PlayerID.None;
+        void OnCollisionEnter2D (Collision2D c) {
+            Ball ball = c.gameObject.GetComponent<Ball>();
 
-    private void Start () {
-        paddle = gameObject.GetComponent<Paddle>();
-    }
+            if (ball != null) {
+                player = paddle.AssignedPlayer;
+                Vector3 f = ball.DerivePaddleReflectionForce(c, paddle);
 
-    void OnCollisionEnter2D (Collision2D c) {
-        Ball ball = c.gameObject.GetComponent<Ball>();
+                ball.ApplyForce(f);
+                ball.LastToHit = player;
 
-        if (ball != null) {
-            player = paddle.AssignedPlayer;
-            Vector3 f = ball.CalculateEnglish (player, ball.transform.position, transform.position, paddle.ColliderLength);
-            ball.RB.AddForce(f);
-            ball.LastToHit = player;
-
-            RaiseOnStruckBall = () => { 
-                Debug.LogFormat ("struck by {0}", ball.LastToHit); 
-            };
+                Debug.DrawRay(paddle.transform.position, f, Color.red, 3.0f);
+            }
         }
-
-        RaiseOnStruckBall.InvokeSafe ();
     }
 }

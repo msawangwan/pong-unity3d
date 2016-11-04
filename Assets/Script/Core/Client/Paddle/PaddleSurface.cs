@@ -3,7 +3,7 @@ using mExtensions.Common;
 
 namespace mUnityFramework.Pong {
     [RequireComponent(typeof(EdgeCollider2D))]
-    public class PaddleSurface : MonoBehaviour {
+    public class PaddleSurface : PaddleComponent {
         public enum ScreenLocation : int {
             None = 0,
             Bottom,
@@ -48,9 +48,9 @@ namespace mUnityFramework.Pong {
 
         private Vector3 CalculateOrthogonal (PaddleSurface.ScreenLocation location) {
             if (location == PaddleSurface.ScreenLocation.Top) {
-                return B.OrthogonalOf(ExtensionBounds.ScaleBy.Width);
+                return B.OrthogonalNormalizedOf ();
             } else {
-                return B.OrthogonalOf(ExtensionBounds.ScaleBy.Width, false);
+                return B.OrthogonalNormalizedOf (false);
             }
         }
 

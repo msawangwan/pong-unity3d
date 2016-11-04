@@ -16,7 +16,7 @@ public static class ExtensionBounds {
     }
 
     /* scales by |v| * 1/2  */
-    public static Vector3 OrthogonalOf (this Bounds b, ExtensionBounds.ScaleBy s,bool rightFacing=true) {
+    public static Vector3 OrthogonalOf (this Bounds b, ExtensionBounds.ScaleBy s, bool rightFacing=true) {
         float scalar = 0.0f;
 
         if (s == ExtensionBounds.ScaleBy.Width) {
