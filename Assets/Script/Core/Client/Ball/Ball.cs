@@ -28,9 +28,6 @@ namespace mUnityFramework.Pong {
             get {
                 if (tr == null) {
                     tr = gameObject.GetComponentInChildren<TrailRenderer> ();
-                    if (tr == null) {
-                        Debug.LogErrorFormat("problem: {0} couldn't find a trail renderer in its children", gameObject.name);
-                    }
                 }
                 return tr;
             }
@@ -50,7 +47,7 @@ namespace mUnityFramework.Pong {
         }
 
         public static Vector3 SetVelocityOf (Ball b, Vector3 v) {
-            b.RB.velocity = v;
+            b.RB.velocity = v.Truncate(b.MaxAttainableVelocity);
             return b.RB.velocity;
         }
 

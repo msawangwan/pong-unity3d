@@ -21,10 +21,11 @@ namespace mStateFramework.Core {
             if (isExecuting) {
                 foreach (Player p in game.Players) {
                     if (p.AssignedPaddle != null) {
-                        p.AssignedPaddle.ChangePhaseToServe();
                         if (p.PID == serving.ServerPID) {
-                            p.AssignedPaddle.IsSetAsServing = true;
+                            p.AssignedPaddle.EnterServeStatusAsServer(true);
                             text = string.Format("SERVER: {0}", serving.ServerPID);
+                        } else {
+                            p.AssignedPaddle.EnterServeStatusAsServer(false);
                         }
                     }
                 }

@@ -27,7 +27,7 @@ namespace mUnityFramework.Pong {
             Top,
         }
 
-        public enum GameState : int { 
+        public enum PaddleStatus : int { 
             None = 0,
             Menu,
             Enter, 
@@ -61,7 +61,7 @@ namespace mUnityFramework.Pong {
 
         public PaddleServeController ServeController {
             get {
-                if (serveController == null) {
+                if (serveController.IsNull()) {
                     serveController = gameObject.GetComponentSafe<PaddleServeController> ();
                 }
                 return serveController;
@@ -70,7 +70,7 @@ namespace mUnityFramework.Pong {
 
         public PaddleStrikeController StrikeController {
             get {
-                if (serveController == null) {
+                if (serveController.IsNull()) {
                     strikeController = gameObject.GetComponentSafe<PaddleStrikeController> ();
                 }
                 return strikeController;
@@ -79,7 +79,7 @@ namespace mUnityFramework.Pong {
 
         public Rigidbody2D RB {
             get {
-                if (rb == null) {
+                if (rb.IsNull()) {
                     rb = gameObject.GetComponent<Rigidbody2D> ();
                 }
                 return rb;
@@ -88,9 +88,9 @@ namespace mUnityFramework.Pong {
 
         public TrailRenderer TR {
             get {
-                if (tr == null) {
+                if (tr.IsNull()) {
                     tr = gameObject.GetComponentInChildren<TrailRenderer> ();
-                    if (tr == null) {
+                    if (tr.IsNull()) {
                         err (gameObject.name + ": null trail renderer");
                     }
                 }
@@ -116,11 +116,16 @@ namespace mUnityFramework.Pong {
             }
         }
 
+        public PaddleStatus Status {
+            get;
+            private set;
+        }
+
         public          PaddleParamters        Parameters       = null;
 
         protected const string                 kHAxis           = "Horizontal";
 
-        protected       System.Action<string>  log              = (msg) => Debug.LogFormat ("[info][paddle] {0}", msg);
+        protected       System.Action<string>  info             = (msg) => Debug.LogFormat ("[info][paddle] {0}", msg);
         protected       System.Action<string>  err              = (msg) => Debug.LogErrorFormat ("[error][paddle] {0}", msg);
 
         protected       Player.PlayerID        assignedPlayer   = Player.PlayerID.None;
@@ -135,10 +140,6 @@ namespace mUnityFramework.Pong {
         private         int                    playState        = 0;
         private         float                  xLeftWrapBound   = 0.0f;
         private         float                  xRightWrapBound  = 0.0f;
-        private         bool                   isInServePhase   = false;
-        private         bool                   isInPlayPhase    = false;
-        private         bool                   isSetAsServing   = false;
-        private         bool                   hasServed        = false;
 
         public float LeftSideScreenBoundry { 
             get {
@@ -152,40 +153,15 @@ namespace mUnityFramework.Pong {
             }
         }
 
-        public bool IsInServePhase {
-            get {
-                return isInServePhase;
-            }
-            set {
-                isInServePhase = value;
-            }
-        }
-
-        public bool IsInPlayPhase {
-            get {
-                return isInPlayPhase;
-            }
-            set {
-                isInPlayPhase = value;
-            }
-        }
-
         public bool HasServed {
             get {
-                return hasServed;
-            }
-            set {
-                hasServed = value;
+                return Status == Paddle.PaddleStatus.Play;
             }
         }
 
         public bool IsSetAsServing {
-            get {
-                return isSetAsServing;
-            }
-            set {
-                isSetAsServing = value;
-            }
+            get;
+            private set;
         }
 
         private float hForceMultiplier { 
@@ -196,6 +172,14 @@ namespace mUnityFramework.Pong {
 
         protected abstract bool ServeBall ();
         protected abstract Vector3 CalculateHorizontalMoveForce (float paddleMoveSpeed);
+
+        public bool EnterServeStatusAsServer (bool isServing) {
+            Status = Paddle.PaddleStatus.Serve;
+            if (isServing) {
+                IsSetAsServing = true;
+            }
+            return IsSetAsServing;
+        }
 
         private Vector3 WrapPositionIfOffScreen (float xComponentCurrentPosition) {
             float xInverted = xComponentCurrentPosition * -1.0f; // sign flip
@@ -221,54 +205,58 @@ namespace mUnityFramework.Pong {
         }
 
         private void Update () {
-            if (isInServePhase == true && isSetAsServing == true) {
-                log(string.Format("{0} in serve phase loop", AssignedPlayer));
+            switch(Status) {
+                case PaddleStatus.Serve:
+                    info (string.Format("{0} in serve phase loop", AssignedPlayer));
 
-                if (serveState == 0) {
-                    if (ball == null) {
-                        ball = BallManager.StaticInstance.CurrentBall;
-                    }
-                    serveState = 1;
-                }
-
-                if (serveState == 1) {
-                    ServeController.SetForService (this, ball);
-                    serveState = 2;
-                }
-
-                if (serveState == 2) {
-                    hasServed = ServeBall ();
-                    if (hasServed == true) {
-                        bool served = ServeController.Serve (
-                            ball, 
-                            ServeController.ServeForce ()
-                        );
-
-                        if (served) {
-                            isSetAsServing = false;
-                            isInServePhase = false;
-                            isInPlayPhase = true;
-                            serveState = 0;
+                    if (IsSetAsServing) {
+                        if (serveState == 0) {
+                            if (ball.IsNull()) {
+                                ball = BallManager.StaticInstance.CurrentBall;
+                            }
+                            serveState = 1;
                         }
+
+                        if (serveState == 1) {
+                            ServeController.SetForService (this, ball);
+                            serveState = 2;
+                        }
+
+                        if (serveState == 2) {
+                            bool hasServed = ServeBall ();
+                            if (hasServed) {
+                                bool served = ServeController.Serve(
+                                    ball,
+                                    ServeController.ServeForce ()
+                                );
+
+                                if (served) {
+                                    serveState = 0;
+                                    IsSetAsServing = false;
+                                    Status = PaddleStatus.Play;
+                                }
+                            }
+                        }
+                    } else {
+                        Status = PaddleStatus.Play;
                     }
-                }
 
-                return;
-            } else {
-                isInPlayPhase = true;
-            }
-
-            if (isInPlayPhase == true) {
-                log(string.Format("{0} in play phase loop", AssignedPlayer));
-
-                if (playState == 0)  {
-                    playState = 1;
                     return;
-                }
+                case PaddleStatus.Play:
+                    info (string.Format("{0} in play phase loop", AssignedPlayer));
 
-                if (playState == 1) {
+                    if (playState == 0)  {
+                        playState = 1;
+                        return;
+                    }
+
+                    if (playState == 1) {
+                        return;
+                    }
+
                     return;
-                }
+                default:
+                    break;
             }
         }
 

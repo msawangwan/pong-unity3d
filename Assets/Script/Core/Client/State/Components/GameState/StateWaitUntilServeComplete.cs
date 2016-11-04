@@ -19,7 +19,7 @@ namespace mStateFramework.Core {
 
         public override void Execute () {
             if (isExecuting) {
-                isExecuting = !served.Server.AssignedPaddle.IsInPlayPhase; // temp: hard coded to p1
+                isExecuting = !served.Server.AssignedPaddle.HasServed;
             } else {
                 OnChangeState ();
             }
