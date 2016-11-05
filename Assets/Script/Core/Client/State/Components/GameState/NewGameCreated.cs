@@ -3,24 +3,11 @@ using mGameFramework.Core;
 using mUIFramework.mvc;
 
 namespace mStateFramework.Core {
-	public class StateSpawnNewSessionInstance : State<Game> {
+	public class NewGameCreated : State<Game> {
         private Session session = null;
         private Game game = null;
 
         protected override bool isExecuting { get; set; }
-
-        public StateSpawnNewSessionInstance () : base () { 
-            if (session.IsNull()) {
-                session = SessionController.SpawnNew ();
-                if (!session.IsValid) {
-                    log("invalid session");
-                }
-            }
-        }
-
-        public StateSpawnNewSessionInstance (Session session) : base () {
-            this.session = session;
-        }
 
         public override void Enter (Game context) {
             game = new Game ();

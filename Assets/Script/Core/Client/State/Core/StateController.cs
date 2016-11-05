@@ -15,7 +15,7 @@ namespace mStateFramework.Core {
             False,
         }
 
-        private StateController<T>.Status controllerStatus = StateController<T>.Status.None;
+        protected abstract StateController<T>.Status controllerStatus { get; set; }
         private StateController<T>.Initialised initialisedStatus = StateController<T>.Initialised.False;
 
         private T context = default(T); // context
@@ -37,11 +37,14 @@ namespace mStateFramework.Core {
         protected abstract StateController<T>.Status SetStatus();
         protected abstract State<T> LoadNew (StateController<T>.Initialised initStatus);
 
-        public bool SetStatusToLoading () {
-            return false;
+        public System.Func<int, int> onEndCallback { get; set; }
+
+        public  void BeginStartController (System.Func<int, int> onEnd) {
+            controllerStatus = StateController<T>.Status.Loading;
+            onEndCallback = onEnd;
         }
 
-        private void HandleOnStateChanged(IStateContext<T> context) {
+        private void HandleOnStateChanged (IStateContext<T> context) {
             this.context = context.Context;
             this.next = context.NextState;
             this.transition = context.Transition;
@@ -59,14 +62,14 @@ namespace mStateFramework.Core {
                 case StateController<T>.Status.None:
                     return;
                 case StateController<T>.Status.Loading:
-                    State<T> newSession = LoadNew(initialisedStatus);
+                    State<T> initialState = LoadNew(initialisedStatus);
 
-                    if (newSession.IsNull()) {
+                    if (initialState.IsNull()) {
                         initialisedStatus = StateController<T>.Initialised.False;
                         return;
                     }
 
-                    initialised = newSession;
+                    initialised = initialState;
                     initialisedStatus = StateController<T>.Initialised.True;
                     controllerStatus = StateController<T>.Status.Executing;
 

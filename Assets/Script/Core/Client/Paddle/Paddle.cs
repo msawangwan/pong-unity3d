@@ -199,9 +199,12 @@ namespace mUnityFramework.Pong {
         }
 
         private void Start () {
+            Status = PaddleStatus.None;
             float[] wallBounds = WallManager.CalculateVerticalLeftAndRightWrapBounds (ColliderLength);
             xLeftWrapBound = wallBounds[0];
             xRightWrapBound = wallBounds[1];
+            // xLeftWrapBound = WallManager.StaticInstance.LeftMostVertical;
+            // xRightWrapBound = WallManager.StaticInstance.RightMostVertical;
         }
 
         private void Update () {
@@ -256,12 +259,22 @@ namespace mUnityFramework.Pong {
 
                     return;
                 default:
-                    break;
+                    return;
             }
         }
 
         private void FixedUpdate () {
+            switch (Status){
+                case PaddleStatus.Serve:
+                    break;
+                case PaddleStatus.Play:
+                    break;
+                default:
+                    return;
+            }
+
             RB.AddForce(CalculateHorizontalMoveForce(hForceMultiplier).Truncate(Parameters.MaximumHorizontalMoveForce));
+            // transform.position = WallManager.StaticInstance.WrapPosition (this);
             transform.position = WrapPositionIfOffScreen (transform.position.x);
         }
 

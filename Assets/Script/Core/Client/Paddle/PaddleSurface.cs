@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using mExtensions.Common;
+using mUnityFramework.TwoDee;
 
 namespace mUnityFramework.Pong {
     [RequireComponent(typeof(EdgeCollider2D))]
@@ -11,6 +12,17 @@ namespace mUnityFramework.Pong {
         }
 
         public PaddleSurface.ScreenLocation Location = PaddleSurface.ScreenLocation.None;
+
+        // private Surface2D s;
+
+        // private void aaaa () {
+        //     Surface2D.Axis a = Surface2D.Axis.Horizontal;
+        //     Surface2D.Front f = Surface2D.Front.Right;
+        //     if (Location == PaddleSurface.ScreenLocation.Bottom) {
+        //         f = Surface2D.Front.Left;
+        //     }
+        //     s = Surface2D.New (a, f, EC, B);
+        // }
 
         public EdgeCollider2D EC {
             get {
@@ -27,8 +39,8 @@ namespace mUnityFramework.Pong {
             }
         }
 
-        public Vector3 Orthogonal { 
-            get; 
+        public Vector3 Orthogonal {
+            get;
             private set; 
         }
 

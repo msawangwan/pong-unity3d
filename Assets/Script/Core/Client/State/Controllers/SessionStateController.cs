@@ -3,6 +3,10 @@ using mGameFramework.Core;
 
 namespace mStateFramework.Core {
     public class SessionStateController : StateController<Session> {
+        public static SessionStateController Singleton = null;
+
+        protected override StateController<Session>.Status controllerStatus { get; set; }
+
         protected override bool debug_startOnButtonPress { get { return false; } }
 
         protected override StateController<Session>.Status SetStatus() {
@@ -14,6 +18,10 @@ namespace mStateFramework.Core {
                 return new LoadSessionInstance();
             }
             return null;
+        }
+
+        private void Awake () {
+            Singleton = this;
         }
     }
 }
