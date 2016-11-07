@@ -7,9 +7,7 @@ namespace mUnityFramework.Game.Pong {
                 launcher,
                 Vector3.zero
             );
-
-            rb.position = launcher.position;
-            // rb.position = launcher.position + offset.AsYOfNewVector();
+            transform.position = launcher.position + offset.AsYOfNewVector();
             ball.gameObject.SetActive (true);
         }
 
