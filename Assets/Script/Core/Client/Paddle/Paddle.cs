@@ -100,9 +100,9 @@ namespace mUnityFramework.Game.Pong {
 
 		private void Start () {
 			PaddleStatus = Paddle.Status.Enabled;
-            PaddleState = Paddle.State.Serve;
+            // PaddleState = Paddle.State.Serve;
             Rb.position = new Vector3(0, Property.hPosition, 0);
-		}
+        }
 
 		private void FixedUpdate () {
 			Mover.MoveUpdate ();

@@ -382,7 +382,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: START
+  m_Text: AGAIN?
 --- !u!222 &1339235442
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -539,10 +539,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1542355284}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc55e230322184047842408336b8957d, type: 3}
+  m_Script: {fileID: 11500000, guid: 16eb84ae91111b14691162e5ae487901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BtnBeginNewGame: {fileID: 1418285177}
+  BtnPlayAgain: {fileID: 1418285177}
   NewGameSceneIndex: 2
 --- !u!1 &1836741766
 GameObject:
