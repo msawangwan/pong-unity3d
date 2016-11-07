@@ -1,285 +1,113 @@
 ﻿using UnityEngine;
-using mExtensions.Common;
-using System.Collections.Generic;
+using mUnityFramework.Physics.TwoDee;
 
-/// <summary>
-/// base class for a paddle gameObject
-/// </summary>
+namespace mUnityFramework.Game.Pong {
+	[RequireComponent(typeof(PaddleProperty))]
+	[RequireComponent(typeof(PaddleMoveBehaviour))]
+	[RequireComponent(typeof(PaddleLauncherBehaviour))]
+	[RequireComponent(typeof(EdgeCollider2D))]
+	[RequireComponent(typeof(Rigidbody2D))]
+	public class Paddle : MonoBehaviour {
+		public enum Status : byte {
+			None = 0,
+			Enabled,
+			Disabled,
+		}
 
-namespace mUnityFramework.Pong {
-    [RequireComponent(typeof(EdgeCollider2D))]
-    [RequireComponent(typeof(Rigidbody2D))]
-    [RequireComponent(typeof(PaddleServeController))]
-    [RequireComponent(typeof(PaddleStrikeController))]
-    public abstract class Paddle : MonoBehaviour {
-        [System.Serializable]
-        public class PaddleParamters {
-            public Paddle.PaddleID PID                   = Paddle.PaddleID.None;
-            [RangeAttribute(00.01f, 100.00f)]
-            public float  HorizontalMoveForceMultiplier  = 3.0f;
-            public float  FixedHorizontalPosition        = 0.0f; // y position
-            public float  MaximumHorizontalMoveForce = 10.0f;
-        }
+		public enum State : byte {
+			None = 0,
+			Serve,
+			Play,
+		}
 
-        public enum PaddleID : int { 
-            None = 0,
-            Bottom, 
-            Top,
-        }
+		private PaddleProperty          cachedProperty      = null;
+		private PaddleMoveBehaviour     cachedMover         = null;
+		private PaddleLauncherBehaviour cachedLauncher      = null;
+		private Rigidbody2D             cachedRigidBody     = null;
+		private EdgeCollider2D          cachedEdgeCollider  = null;
+		private Surface2D               cachedSurface       = null;
+		private TrailRenderer           cachedTrailRenderer = null;
 
-        public enum PaddleStatus : int { 
-            None = 0,
-            Menu,
-            Enter, 
-            Idle,
-            Serve, 
-            Play, 
-            Exit,
-        }
+		public Paddle.Status PaddleStatus { get; set; }
+		public Paddle.State PaddleState { get; set; }
 
-        private static List<Paddle>      instances        = new List<Paddle>();
-        public static IEnumerable<Paddle> Instances { get { return instances; } }
+		public PaddleProperty Property {
+			get {
+				if (cachedProperty == null) {
+					cachedProperty = GetComponent<PaddleProperty>();
+				}
+				return cachedProperty;
+			}
+		}
 
-        public Player.PlayerID AssignedPlayer { 
-            get {
-                return assignedPlayer;
-            }
+		public PaddleMoveBehaviour Mover {
+			get {
+				if (cachedMover == null) {
+					cachedMover = GetComponent<PaddleMoveBehaviour>();
+				}
+				return cachedMover;
+			}
+		}
 
-            set {
-                assignedPlayer = value;
-            } 
-        }
+		public PaddleLauncherBehaviour Launcher {
+			get {
+				if (cachedLauncher == null) {
+					cachedLauncher = GetComponent<PaddleLauncherBehaviour>();
+				}
+				return cachedLauncher;
+			}
+		}
 
-        public PaddleSurface Surface {
-            get {
-                if (surface.IsNull()) {
-                    surface = gameObject.GetComponent<PaddleSurface>();
-                }
-                return surface;
-            }
-        }
+		public Surface2D Surface {
+			get {
+				if (cachedSurface == null) {
+					cachedSurface = Surface2D.New (
+						Surface2D.Axis.Horizontal,
+						Surface2D.Front.Right,
+						Ec
+					);
+				}
+				return cachedSurface;
+			}
+		}
 
-        public PaddleServeController ServeController {
-            get {
-                if (serveController.IsNull()) {
-                    serveController = gameObject.GetComponentSafe<PaddleServeController> ();
-                }
-                return serveController;
-            }
-        }
+		public Rigidbody2D Rb {
+			get {
+				if (cachedRigidBody == null) {
+					cachedRigidBody = GetComponent<Rigidbody2D>();
+				}
+				return cachedRigidBody;
+			}
+		}
 
-        public PaddleStrikeController StrikeController {
-            get {
-                if (serveController.IsNull()) {
-                    strikeController = gameObject.GetComponentSafe<PaddleStrikeController> ();
-                }
-                return strikeController;
-            }
-        }
+		public EdgeCollider2D Ec {
+			get {
+				if (cachedEdgeCollider == null) {
+					cachedEdgeCollider = GetComponent<EdgeCollider2D>();
+				}
+				return cachedEdgeCollider;
+			}
+		}
 
-        public Rigidbody2D RB {
-            get {
-                if (rb.IsNull()) {
-                    rb = gameObject.GetComponent<Rigidbody2D> ();
-                }
-                return rb;
-            }
-        }
+		public TrailRenderer Tr {
+			get {
+				if (cachedTrailRenderer == null) {
+					cachedTrailRenderer = GetComponentInChildren<TrailRenderer>();
+				}
+				return cachedTrailRenderer;
+			}
+		}
 
-        public TrailRenderer TR {
-            get {
-                if (tr.IsNull()) {
-                    tr = gameObject.GetComponentInChildren<TrailRenderer> ();
-                    if (tr.IsNull()) {
-                        err (gameObject.name + ": null trail renderer");
-                    }
-                }
-                return tr;
-            }
-        }
+		private void Start () {
+			PaddleStatus = Paddle.Status.Enabled;
+            PaddleState = Paddle.State.Serve;
+            Rb.position = new Vector3(0, Property.hPosition, 0);
+		}
 
-        public Vector3 ColliderOrthogonal {
-            get {
-                return Surface.Orthogonal;
-            }
-        }
-
-        public float ColliderLength {
-            get {
-                return Surface.Length;
-            }
-        }
-
-        public float ColliderMidpoint {
-            get {
-                return Surface.Length * 0.5f;
-            }
-        }
-
-        public PaddleStatus Status {
-            get;
-            private set;
-        }
-
-        public          PaddleParamters        Parameters       = null;
-
-        protected const string                 kHAxis           = "Horizontal";
-
-        protected       System.Action<string>  info             = (msg) => Debug.LogFormat ("[info][paddle] {0}", msg);
-        protected       System.Action<string>  err              = (msg) => Debug.LogErrorFormat ("[error][paddle] {0}", msg);
-
-        protected       Player.PlayerID        assignedPlayer   = Player.PlayerID.None;
-        protected       Ball                   ball             = null;
-
-        private         PaddleSurface          surface          = null;
-        private         PaddleServeController  serveController  = null;
-        private         PaddleStrikeController strikeController = null;
-        private         Rigidbody2D            rb               = null;
-        private         TrailRenderer          tr               = null;
-        private         int                    serveState       = 0;
-        private         int                    playState        = 0;
-        private         float                  xLeftWrapBound   = 0.0f;
-        private         float                  xRightWrapBound  = 0.0f;
-
-        public float LeftSideScreenBoundry { 
-            get {
-                return xLeftWrapBound;
-            }
-        }
-
-        public float RightSideScreenBoundry { 
-            get {
-                return xRightWrapBound;
-            }
-        }
-
-        public bool HasServed {
-            get {
-                return Status == Paddle.PaddleStatus.Play;
-            }
-        }
-
-        public bool IsSetAsServing {
-            get;
-            private set;
-        }
-
-        private float hForceMultiplier { 
-            get { 
-                return Parameters.HorizontalMoveForceMultiplier; 
-            } 
-        }
-
-        protected abstract bool ServeBall ();
-        protected abstract Vector3 CalculateHorizontalMoveForce (float paddleMoveSpeed);
-
-        public bool EnterServeStatusAsServer (bool isServing) {
-            Status = Paddle.PaddleStatus.Serve;
-            if (isServing) {
-                IsSetAsServing = true;
-            }
-            return IsSetAsServing;
-        }
-
-        private Vector3 WrapPositionIfOffScreen (float xComponentCurrentPosition) {
-            float xInverted = xComponentCurrentPosition * -1.0f; // sign flip
-            if ((xComponentCurrentPosition - ColliderMidpoint) < xLeftWrapBound) {
-                TR.Clear ();
-                return new Vector3 (xInverted - ColliderLength, Parameters.FixedHorizontalPosition, 0.0f);
-            } else if ((xComponentCurrentPosition + ColliderMidpoint) > xRightWrapBound) {
-                TR.Clear ();
-                return new Vector3 (xInverted + ColliderLength, Parameters.FixedHorizontalPosition, 0.0f);
-            } else {
-                return transform.position;
-            }
-        }
-
-        private void Awake () {
-            instances.Add (this);
-        }
-
-        private void Start () {
-            Status = PaddleStatus.None;
-            float[] wallBounds = WallManager.CalculateVerticalLeftAndRightWrapBounds (ColliderLength);
-            xLeftWrapBound = wallBounds[0];
-            xRightWrapBound = wallBounds[1];
-            // xLeftWrapBound = WallManager.StaticInstance.LeftMostVertical;
-            // xRightWrapBound = WallManager.StaticInstance.RightMostVertical;
-        }
-
-        private void Update () {
-            switch(Status) {
-                case PaddleStatus.Serve:
-                    info (string.Format("{0} in serve phase loop", AssignedPlayer));
-
-                    if (IsSetAsServing) {
-                        if (serveState == 0) {
-                            if (ball.IsNull()) {
-                                ball = BallManager.StaticInstance.CurrentBall;
-                            }
-                            serveState = 1;
-                        }
-
-                        if (serveState == 1) {
-                            ServeController.SetForService (this, ball);
-                            serveState = 2;
-                        }
-
-                        if (serveState == 2) {
-                            bool hasServed = ServeBall ();
-                            if (hasServed) {
-                                bool served = ServeController.Serve(
-                                    ball,
-                                    ServeController.ServeForce ()
-                                );
-
-                                if (served) {
-                                    serveState = 0;
-                                    IsSetAsServing = false;
-                                    Status = PaddleStatus.Play;
-                                }
-                            }
-                        }
-                    } else {
-                        Status = PaddleStatus.Play;
-                    }
-
-                    return;
-                case PaddleStatus.Play:
-                    info (string.Format("{0} in play phase loop", AssignedPlayer));
-
-                    if (playState == 0)  {
-                        playState = 1;
-                        return;
-                    }
-
-                    if (playState == 1) {
-                        return;
-                    }
-
-                    return;
-                default:
-                    return;
-            }
-        }
-
-        private void FixedUpdate () {
-            switch (Status){
-                case PaddleStatus.Serve:
-                    break;
-                case PaddleStatus.Play:
-                    break;
-                default:
-                    return;
-            }
-
-            RB.AddForce(CalculateHorizontalMoveForce(hForceMultiplier).Truncate(Parameters.MaximumHorizontalMoveForce));
-            // transform.position = WallManager.StaticInstance.WrapPosition (this);
-            transform.position = WrapPositionIfOffScreen (transform.position.x);
-        }
-
-        private void OnEnable () {
-            transform.position = Parameters.FixedHorizontalPosition.AsVectorComponenty ();
-        }
-    }
+		private void FixedUpdate () {
+			Mover.MoveUpdate ();
+            Launcher.LaunchUpdate ();
+            Surface.DrawNormal ();
+		}
+	}
 }

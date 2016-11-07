@@ -1,68 +1,75 @@
 ﻿using UnityEngine;
 
-namespace mUnityFramework.Pong {
-    [RequireComponent(typeof(CircleCollider2D))]
-    [RequireComponent(typeof(Rigidbody2D))]
-    public class Ball : MonoBehaviour {
-        public enum State { None, AtRest, ToServe, InPlay }
+namespace mUnityFramework.Game.Pong {
+	[RequireComponent(typeof(BallProperty))]
+	[RequireComponent(typeof(BallForceBehaviour))]
+	[RequireComponent(typeof(BallControllerBehaviour))]
+	[RequireComponent(typeof(CircleCollider2D))]
+	[RequireComponent(typeof(Rigidbody2D))]
+	public class Ball : MonoBehaviour {
+		[SerializeField] private Transform ballContainerTransform = null;
 
-        public Ball Balll {
-            get {
-                if (ball == null) {
-                    ball = GetComponent<Ball>();
+        private System.Action<string> info = msg => Debug.LogFormat("[info][ball][{0}]", msg);
+
+        private BallProperty            cachedProperty = null;
+        private BallControllerBehaviour cachedController = null;
+        private BallForceBehaviour      cachedForce = null;
+        private Rigidbody2D             cachedRb = null;
+		private CircleCollider2D        cachedCc = null;
+		private TrailRenderer           cachedTr = null;
+
+		public BallProperty Property {
+			get {
+				if (cachedProperty == null) {
+                    cachedProperty = GetComponent<BallProperty>();
                 }
-                return ball;
+                return cachedProperty;
             }
-        }
+		}
 
-        public Rigidbody2D RB {
-            get {
-                if (rb == null) {
-                    rb = gameObject.GetComponentSafe<Rigidbody2D>();
+		public BallControllerBehaviour Controller {
+			get {
+				if (cachedController == null) {
+                    cachedController = GetComponent<BallControllerBehaviour>();
                 }
-                return rb;
+                return cachedController;
             }
-        }
+		}
 
-        public TrailRenderer TR {
-            get {
-                if (tr == null) {
-                    tr = gameObject.GetComponentInChildren<TrailRenderer> ();
+		public BallForceBehaviour Force {
+			get {
+				if (cachedForce == null) {
+                    cachedForce = GetComponent<BallForceBehaviour>();
                 }
-                return tr;
+                return cachedForce;
             }
-        }
+		}
 
-        public float MaxAttainableVelocity = 10.0f;
+		public CircleCollider2D Cc {
+			get {
+				if (cachedCc == null) {
+					cachedCc = GetComponent<CircleCollider2D>();
+				}
+				return cachedCc;
+			}
+		}
 
-        private Ball ball = null;
-        private Rigidbody2D rb = null;
-        private TrailRenderer tr = null;
+		public Rigidbody2D Rb {
+			get {
+				if (cachedRb == null) {
+					cachedRb = GetComponent<Rigidbody2D>();
+				}
+				return cachedRb;
+			}
+		}
 
-        public State CurrentState { get; set; }
-        public Player.PlayerID LastToHit { get; set; }
-
-        public Vector3 DeriveReflectionForce (Collision2D c, Vector3 n) {
-            return ((Vector3) c.relativeVelocity - (2 * Vector3.Dot (c.relativeVelocity, n) * n)) * -1f; // [r = e - 2(dot(e,n)) * n][e = relative velocity][n = wall normal]
-        }
-
-        public static Vector3 SetVelocityOf (Ball b, Vector3 v) {
-            b.RB.velocity = v.Truncate(b.MaxAttainableVelocity);
-            return b.RB.velocity;
-        }
-
-        public static void ResetAndPositionAt (Transform parent, Ball ball, Vector3 restPosition) {
-            ball.gameObject.SetActive (false);
-
-            ball.RB.isKinematic = true;
-            ball.RB.velocity = Vector3.zero;
-
-            ball.TR.enabled = false;
-            ball.TR.Clear ();
-
-            ball.transform.rotation = Quaternion.identity;
-            ball.transform.position = restPosition;
-            ball.transform.SetParent (parent);
-        }
-    }
+		public TrailRenderer Tr {
+			get {
+				if (cachedTr == null) {
+					cachedTr = GetComponentInChildren<TrailRenderer>();
+				}
+				return cachedTr;
+			}
+		}
+	}
 }

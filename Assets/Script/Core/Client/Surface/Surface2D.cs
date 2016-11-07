@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
-namespace mUnityFramework.TwoDee {
+namespace mUnityFramework.Physics.TwoDee {
     public class Surface2D {
         public enum Axis : byte {
             Horizontal,
@@ -12,9 +11,6 @@ namespace mUnityFramework.TwoDee {
             Left,
             Right,
         }
-
-        private static Dictionary<Surface2D.Axis, List<Surface2D>> surfaces =
-            new Dictionary<Surface2D.Axis, List<Surface2D>>();
 
         private EdgeCollider2D edgeCollider = null;
         private Bounds bounds = default(Bounds);
@@ -28,7 +24,7 @@ namespace mUnityFramework.TwoDee {
         public Vector3 Normal {
             get {
                 if (!hasCalculatedNormal) {
-                    if (front == Surface2D.Front.Right) {
+                    if (front == Surface2D.Front.Left) {
                         normalCached = bounds.OrthogonalNormalizedOf (true);
                     } else {
                         normalCached = bounds.OrthogonalNormalizedOf (false);
@@ -50,7 +46,7 @@ namespace mUnityFramework.TwoDee {
             }
         }
 
-        public float Width {
+        public float Length {
             get {
                 return bounds.size.x;
             }
@@ -65,22 +61,29 @@ namespace mUnityFramework.TwoDee {
         private Surface2D (
             Surface2D.Axis axis,
             Surface2D.Front front,
-            EdgeCollider2D edgeCollider, 
-            Bounds bounds
+            EdgeCollider2D edgeCollider
         ) {
             this.axis = axis;
             this.front = front;
             this.edgeCollider = edgeCollider;
-            this.bounds = bounds;
+            this.bounds = edgeCollider.bounds;
         }
 
         public static Surface2D New (
             Surface2D.Axis axis,
             Surface2D.Front front,
-            EdgeCollider2D edgeCollider, 
-            Bounds bounds
+            EdgeCollider2D edgeCollider
         ) {
-            return new Surface2D(axis, front, edgeCollider, bounds);
+            return new Surface2D(axis, front, edgeCollider);
+        }
+
+        public void DrawNormal (float duration = 0.0f) {
+            UnityEngine.Debug.DrawRay (
+                edgeCollider.transform.position,
+                Normal,
+                Color.red,
+                duration
+            );
         }
     }
 }
