@@ -2,7 +2,7 @@
 
 namespace mUnityFramework.Game.Pong {
 	public class PaddleLauncherBehaviour : PaddleBehaviour {
-        public UnityEngine.UI.Slider powerMeter;
+        public PowerMeter powerMeter;
         public bool isServing = true;
 
 		private Ball ball = null;
@@ -10,9 +10,9 @@ namespace mUnityFramework.Game.Pong {
 
         private System.Func<float> LaunchPower () {
 			if (Input.GetKeyUp(KeyCode.Space)) {
-                return () => { return powerMeter.value; };
+                return () => { return powerMeter.Level; };
             } else if (Input.GetKey(KeyCode.Space)) {
-				powerMeter.value += 1.0f * Time.deltaTime;
+				powerMeter.Level += 1.0f * Time.deltaTime;
                 return null;
             } else {
                 return null;
@@ -84,8 +84,8 @@ namespace mUnityFramework.Game.Pong {
 								if (hasServed) {
 									state = 0;
 									isServing = false;
+                                    powerMeter.Level = 0f;
 									paddle.PaddleState = Paddle.State.Play;
-                                    powerMeter.value = 0f;
                                 }
 							} 
 						}
