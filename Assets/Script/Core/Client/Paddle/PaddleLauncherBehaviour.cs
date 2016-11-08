@@ -76,7 +76,6 @@ namespace mUnityFramework.Game.Pong {
                             System.Func<float> launchPower = LaunchPower();
                             if (launchPower != null) {
                                 float power = launchPower();
-                                Debug.Log(power);
                                 bool hasServed = Launch (
 									ball, 
 									DeriveLaunchForce (ball, power)
@@ -86,7 +85,8 @@ namespace mUnityFramework.Game.Pong {
 									state = 0;
 									isServing = false;
 									paddle.PaddleState = Paddle.State.Play;
-								}
+                                    powerMeter.value = 0f;
+                                }
 							} 
 						}
 					} else {
