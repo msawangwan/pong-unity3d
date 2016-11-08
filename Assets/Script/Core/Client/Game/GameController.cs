@@ -1,43 +1,85 @@
 ﻿using UnityEngine;
 using mUnityFramework.Game.Pong;
+using System.Collections.Generic;
 
-public class GameController : MonoBehaviour {
-    public Paddle p;
-    public int state = -10;
+namespace mUnityFramework.Game {
+    public class GameController : MonoBehaviour {
+        public enum State {
+            None = 0,
+            Block,
+            Continue,
+        }
 
-    private float ttl = 2.0f;
-    private float timestamp = 0;
+        private static List<GameController> instances = new List<GameController>();
 
-    private CountDown countdown = null;
-    private bool canContinue = false;
+        public static GameController Instance {
+            get {
+                return instances[0];
+            }
+        }
 
-    private void Update () {
-        if (state == -10) {
-            if (countdown == null) {
-                countdown = CountDown.New();
-                countdown.Begin(
-                    () => {
-                        canContinue = true;
+        public Paddle p;
+        public int step = -10;
+
+
+        private float ttl = 2.0f;
+        private float timestamp = 0;
+
+        private CountDown countdown = null;
+        private bool canContinue = false;
+
+        public GameController.State ControllerState { get; private set; }
+
+        private void Awake () {
+            if (instances.Count <= 0) {
+                instances.Add(this);
+            } else {
+                Destroy(gameObject);
+            }
+        }
+
+        private void Start () {
+            ControllerState = GameController.State.Block;
+        }
+
+        private void Update () {
+            switch (ControllerState) {
+                case GameController.State.Block:
+                    if (step == -10) {
+                        if (countdown == null) {
+                            countdown = CountDown.New();
+                            countdown.Begin(
+                                () => {
+                                    canContinue = true;
+                                }
+                            );
+                        }
+                        step = -5;
                     }
-                );
+
+                    if (step == -5) {
+                        if (canContinue) {
+                            step = 0;
+                            ControllerState = GameController.State.Continue;
+                        }
+                    }
+
+                    return;
+                case GameController.State.Continue:
+                    if (step == 0) {
+                        p.PaddleState = Paddle.State.Serve;
+                        step = 5;
+                        return;
+                    }
+
+                    if (step == 5) {
+                        return;
+                    }
+
+                    return;
+                default:
+                    return;
             }
-            state = -5;
-        }
-
-        if (state == -5) {
-            if (canContinue) {
-                state = 0;
-            }
-        }
-
-        if (state == 0) {
-            p.PaddleState = Paddle.State.Serve;
-            state = 5;
-            return;
-        }
-
-        if (state == 5) {
-            return;
         }
     }
 }
