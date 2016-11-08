@@ -7,42 +7,44 @@ namespace mUnityFramework.Game.Pong {
 	[RequireComponent(typeof(CircleCollider2D))]
 	[RequireComponent(typeof(Rigidbody2D))]
 	public class Ball : MonoBehaviour {
+		public const int ballLayer = 22;
+
 		[SerializeField] private Transform ballContainerTransform = null;
 
-        private System.Action<string> info = msg => Debug.LogFormat("[info][ball][{0}]", msg);
+		private System.Action<string> info = msg => Debug.LogFormat("[info][ball][{0}]", msg);
 
-        private BallProperty            cachedProperty = null;
-        private BallControllerBehaviour cachedController = null;
-        private BallForceBehaviour      cachedForce = null;
-        private Rigidbody2D             cachedRb = null;
+		private BallProperty            cachedProperty = null;
+		private BallControllerBehaviour cachedController = null;
+		private BallForceBehaviour      cachedForce = null;
+		private Rigidbody2D             cachedRb = null;
 		private CircleCollider2D        cachedCc = null;
 		private TrailRenderer           cachedTr = null;
 
 		public BallProperty Property {
 			get {
 				if (cachedProperty == null) {
-                    cachedProperty = GetComponent<BallProperty>();
-                }
-                return cachedProperty;
-            }
+					cachedProperty = GetComponent<BallProperty>();
+				}
+				return cachedProperty;
+			}
 		}
 
 		public BallControllerBehaviour Controller {
 			get {
 				if (cachedController == null) {
-                    cachedController = GetComponent<BallControllerBehaviour>();
-                }
-                return cachedController;
-            }
+					cachedController = GetComponent<BallControllerBehaviour>();
+				}
+				return cachedController;
+			}
 		}
 
 		public BallForceBehaviour Force {
 			get {
 				if (cachedForce == null) {
-                    cachedForce = GetComponent<BallForceBehaviour>();
-                }
-                return cachedForce;
-            }
+					cachedForce = GetComponent<BallForceBehaviour>();
+				}
+				return cachedForce;
+			}
 		}
 
 		public CircleCollider2D Cc {
@@ -71,5 +73,13 @@ namespace mUnityFramework.Game.Pong {
 				return cachedTr;
 			}
 		}
+
+		// private void Awake () {
+		// 	UnityEngine.Physics.IgnoreLayerCollision ( // can configure this in prefs (collision matrix)
+		// 		ballLayer,
+		// 		25, // falling coins, etc.
+		// 		true
+		// 	);
+		// }
 	}
 }

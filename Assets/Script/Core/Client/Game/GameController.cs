@@ -31,10 +31,10 @@ namespace mUnityFramework.Game {
         public GameController.State ControllerState { get; private set; }
 
         private void Awake () {
-            if (instances.Count <= 0) {
-                instances.Add(this);
+            if (instances.Count > 0) {
+                instances[0] = this;
             } else {
-                Destroy(gameObject);
+                instances.Add(this);
             }
         }
 

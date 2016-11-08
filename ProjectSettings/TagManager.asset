@@ -25,12 +25,12 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - player
+  - paddle
+  - ball
+  - wall
+  - collectable_fixed
+  - collectable_dynamic
   - 
   - 
   - 
