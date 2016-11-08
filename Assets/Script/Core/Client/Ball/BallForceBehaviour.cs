@@ -11,7 +11,7 @@ namespace mUnityFramework.Game.Pong {
 					) * 
 				impactSurfaceNormal
 				)
-			) * -1f;
+			);
         }
 
 		public Vector3 SetVelocityTo (Vector3 velocity) {

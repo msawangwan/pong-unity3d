@@ -2,22 +2,22 @@
 
 namespace mUnityFramework.Game.Pong {
 	public class PaddleMoveBehaviour : PaddleBehaviour {
-        private Vector3 CalculateHorizontalMoveForce (float multiplier) {
+		private Vector3 CalculateHorizontalMoveForce (float multiplier) {
 			if (Input.GetKey(KeyCode.LeftArrow)) {
-                return (Vector3.left * multiplier);
-            }
-
-			if (Input.GetKey(KeyCode.RightArrow)) {
-                return (Vector3.right * multiplier);
+				return (Vector3.left * multiplier);
 			}
 
-            return Vector3.zero;
-        }
+			if (Input.GetKey(KeyCode.RightArrow)) {
+				return (Vector3.right * multiplier);
+			}
+
+			return Vector3.zero;
+		}
 
 		private bool isOffScreen (Vector3 currentPosition) {
-            return ((currentPosition.x - surface.hMidpoint) < WallManager.S.LeftWallPosition.x) ||
-                ((currentPosition.x + surface.hMidpoint) > WallManager.S.RightWallPosition.x);
-        }
+			return ((currentPosition.x - surface.hMidpoint) < (WallManager.S.LeftWallPosition.x - surface.Length)) || 
+				((currentPosition.x + surface.hMidpoint) > (WallManager.S.RightWallPosition.x + surface.Length));
+		}
 
 		public void MoveUpdate () {
 			switch (paddle.PaddleStatus) {

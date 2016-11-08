@@ -9,7 +9,7 @@ public class CountDown : MonoBehaviour {
 
     int state = -1;
     int count = 3;
-    float fadetime = 0.75f;
+    float fadetime = 0.65f;
     float ttl = 0;
 
     public static CountDown New () {

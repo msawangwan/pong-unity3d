@@ -2,16 +2,21 @@
 
 namespace mUnityFramework.Game.Pong {
 	public class PaddleLauncherBehaviour : PaddleBehaviour {
-		public bool isServing = true;
+        public UnityEngine.UI.Slider powerMeter;
+        public bool isServing = true;
 
 		private Ball ball = null;
 		private int state = 0;
 
-		private bool LaunchSignal () {
-			if (Input.GetKeyDown (KeyCode.Space)) {
-				return true;
-			}
-			return false;
+        private System.Func<float> LaunchPower () {
+			if (Input.GetKeyUp(KeyCode.Space)) {
+                return () => { return powerMeter.value; };
+            } else if (Input.GetKey(KeyCode.Space)) {
+				powerMeter.value += 1.0f * Time.deltaTime;
+                return null;
+            } else {
+                return null;
+            }
 		}
 
 		private bool IsOutOfBounds (float xPos) {
@@ -34,7 +39,7 @@ namespace mUnityFramework.Game.Pong {
 			return false;
 		}
 
-		private Vector3 DeriveLaunchForce (float multiplierPercentage = 0.0f, float steepness = 0.0f) {
+		private Vector3 DeriveLaunchForce (Ball ball, float multiplierPercentage = 0.0f, float steepness = 0.0f) {
 			return new Vector3 (
 				rb.velocity.x * (
 					paddle.Property.LaunchPowerScalar + (
@@ -45,7 +50,7 @@ namespace mUnityFramework.Game.Pong {
 					), 
 				paddle.Property.LaunchSteepness,
 				0f
-			);
+			) * ball.Rb.mass;
 		}
 
 		public void LaunchUpdate () {
@@ -68,10 +73,13 @@ namespace mUnityFramework.Game.Pong {
 						}
 
 						if (state == 2) {
-							if (LaunchSignal()) {
-								bool hasServed = Launch (
+                            System.Func<float> launchPower = LaunchPower();
+                            if (launchPower != null) {
+                                float power = launchPower();
+                                Debug.Log(power);
+                                bool hasServed = Launch (
 									ball, 
-									DeriveLaunchForce ()
+									DeriveLaunchForce (ball, power)
 								);
 
 								if (hasServed) {

@@ -22,6 +22,12 @@ public class CanvasController : MonoBehaviour {
     [SerializeField] private Text txtFieldCenterBanner = null;
 
     public void PrintText (string text) {
+        if (goCenterBanner == null) {
+            goCenterBanner = FindObjectOfType<CenterBanner>().gameObject;
+            if (txtFieldCenterBanner == null) {
+                txtFieldCenterBanner = GetComponentInChildren<Text>();
+            }
+        }
         goCenterBanner.SetActive(true);
         txtFieldCenterBanner.text = text;
     }
