@@ -29,7 +29,7 @@ TagManager:
   - paddle
   - ball
   - wall
-  - collectable_fixed
+  - collectable_static
   - collectable_dynamic
   - 
   - 

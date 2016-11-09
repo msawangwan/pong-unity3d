@@ -73,13 +73,5 @@ namespace mUnityFramework.Game.Pong {
 				return cachedTr;
 			}
 		}
-
-		// private void Awake () {
-		// 	UnityEngine.Physics.IgnoreLayerCollision ( // can configure this in prefs (collision matrix)
-		// 		ballLayer,
-		// 		25, // falling coins, etc.
-		// 		true
-		// 	);
-		// }
 	}
 }

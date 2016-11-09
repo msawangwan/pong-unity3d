@@ -21,7 +21,6 @@ namespace mUnityFramework.Game {
         public Paddle p;
         public int step = -10;
 
-
         private float ttl = 2.0f;
         private float timestamp = 0;
 

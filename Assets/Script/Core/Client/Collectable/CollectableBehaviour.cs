@@ -2,10 +2,10 @@
 
 namespace mUnityFramework.Game.Pong {
     [RequireComponent(typeof(CircleCollider2D))]
-    public abstract class Collectable : MonoBehaviour {
-        public abstract bool collectsOnPaddle { get; }
-        public abstract bool collectsOnBall { get; }
-        public abstract bool collectsOnWall { get; }
+    public abstract class CollectableBehaviour : MonoBehaviour {
+        protected abstract bool collectsOnPaddle { get; }
+        protected abstract bool collectsOnBall { get; }
+        protected abstract bool collectsOnWall { get; }
 
         private void OnTriggerEnter2D (Collider2D c) {
             if (collectsOnPaddle) {

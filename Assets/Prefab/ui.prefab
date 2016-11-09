@@ -234,7 +234,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011003580458}
-  - 114: {fileID: 114000011063629188}
   m_Layer: 0
   m_Name: ui
   m_TagString: Untagged
@@ -1045,13 +1044,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb40a1e3ec470e143a529b699a09eb70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Scoreboard: {fileID: 1000013055164426}
-  FieldPointsScoredP1: {fileID: 114000013432095362}
-  FieldRoundsWonP1: {fileID: 114000014078548548}
-  FieldGamesWonP1: {fileID: 114000011862922676}
-  FieldPointsScoredP2: {fileID: 114000010215117242}
-  FieldRoundsWonP2: {fileID: 114000014030543350}
-  FieldGamesWonP2: {fileID: 114000010931279292}
+  Scoreboard: {fileID: 47906976}
+  FieldPointsScoredP1: {fileID: 47907232}
+  FieldRoundsWonP1: {fileID: 51563936}
+  FieldGamesWonP1: {fileID: 51563424}
+  FieldPointsScoredP2: {fileID: 49126048}
+  FieldRoundsWonP2: {fileID: 49125280}
+  FieldGamesWonP2: {fileID: 64}
 --- !u!114 &114000010257572436
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1270,8 +1269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfbc0471457824b5e9c928d1077e37c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CenterBanner: {fileID: 1000010977200338}
-  FieldBannerText: {fileID: 114000011917316548}
+  CenterBanner: {fileID: 49048864}
+  FieldBannerText: {fileID: 49049120}
 --- !u!114 &114000010931279292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1323,17 +1322,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
---- !u!114 &114000011063629188
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012020311550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c46f93f8a59ee14195ac0f1571f87da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114000011084336016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1676,9 +1664,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3454b3a22d20f494ab0a2e7305b9c24a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartMenu: {fileID: 1000012517203488}
-  btnStartNewGame: {fileID: 114000014256319466}
-  btnGameSettings: {fileID: 114000013792045120}
+  StartMenu: {fileID: 49051424}
+  btnStartNewGame: {fileID: 49052192}
+  btnGameSettings: {fileID: 49052448}
 --- !u!114 &114000011797728066
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2330,9 +2318,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e22873b2c1daee4793d997a2e96b911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMenuModelView: {fileID: 114000011740515458}
-  scoreboardModelView: {fileID: 114000010231169938}
-  centerBannerModelView: {fileID: 114000010807241038}
+  startMenuModelView: {fileID: 49049888}
+  scoreboardModelView: {fileID: 49050144}
+  centerBannerModelView: {fileID: 49050656}
 --- !u!114 &114000013762363096
 MonoBehaviour:
   m_ObjectHideFlags: 1
