@@ -20,6 +20,10 @@ namespace mUnityFramework.Game.Pong {
 			Play,
 		}
 
+		public static System.Action<string> info = msg => Debug.LogFormat (
+			"[info][Paddle][{0}]", msg
+		);
+
 		private PaddleProperty          cachedProperty      = null;
 		private PaddleMoveBehaviour     cachedMover         = null;
 		private PaddleLauncherBehaviour cachedLauncher      = null;
@@ -33,7 +37,7 @@ namespace mUnityFramework.Game.Pong {
 
 		public PaddleProperty Property {
 			get {
-				if (cachedProperty == null) {
+				if (! cachedProperty) {
 					cachedProperty = GetComponent<PaddleProperty>();
 				}
 				return cachedProperty;
@@ -42,7 +46,7 @@ namespace mUnityFramework.Game.Pong {
 
 		public PaddleMoveBehaviour Mover {
 			get {
-				if (cachedMover == null) {
+				if (! cachedMover) {
 					cachedMover = GetComponent<PaddleMoveBehaviour>();
 				}
 				return cachedMover;
@@ -51,10 +55,37 @@ namespace mUnityFramework.Game.Pong {
 
 		public PaddleLauncherBehaviour Launcher {
 			get {
-				if (cachedLauncher == null) {
+				if (! cachedLauncher) {
 					cachedLauncher = GetComponent<PaddleLauncherBehaviour>();
 				}
 				return cachedLauncher;
+			}
+		}
+
+		public Rigidbody2D Rb {
+			get {
+				if (! cachedRigidBody) {
+					cachedRigidBody = GetComponent<Rigidbody2D>();
+				}
+				return cachedRigidBody;
+			}
+		}
+
+		public EdgeCollider2D Ec {
+			get {
+				if (! cachedEdgeCollider) {
+					cachedEdgeCollider = GetComponent<EdgeCollider2D>();
+				}
+				return cachedEdgeCollider;
+			}
+		}
+
+		public TrailRenderer Tr {
+			get {
+				if (! cachedTrailRenderer) {
+					cachedTrailRenderer = GetComponentInChildren<TrailRenderer>();
+				}
+				return cachedTrailRenderer;
 			}
 		}
 
@@ -71,43 +102,14 @@ namespace mUnityFramework.Game.Pong {
 			}
 		}
 
-		public Rigidbody2D Rb {
-			get {
-				if (cachedRigidBody == null) {
-					cachedRigidBody = GetComponent<Rigidbody2D>();
-				}
-				return cachedRigidBody;
-			}
-		}
-
-		public EdgeCollider2D Ec {
-			get {
-				if (cachedEdgeCollider == null) {
-					cachedEdgeCollider = GetComponent<EdgeCollider2D>();
-				}
-				return cachedEdgeCollider;
-			}
-		}
-
-		public TrailRenderer Tr {
-			get {
-				if (cachedTrailRenderer == null) {
-					cachedTrailRenderer = GetComponentInChildren<TrailRenderer>();
-				}
-				return cachedTrailRenderer;
-			}
-		}
-
-		private void Start () {
-			PaddleStatus = Paddle.Status.Enabled;
-            // PaddleState = Paddle.State.Serve;
-            Rb.position = new Vector3(0, Property.hPosition, 0);
-        }
-
 		private void FixedUpdate () {
 			Mover.MoveUpdate ();
             Launcher.LaunchUpdate ();
-            Surface.DrawNormal ();
+            Surface.DrawNormal (); // debug
+		}
+
+		private void OnEnable () {
+			Rb.position = new Vector3 (0, Property.hPosition, 0); // set default fixed horizontal offset
 		}
 	}
 }

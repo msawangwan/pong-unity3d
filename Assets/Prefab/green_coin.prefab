@@ -85,7 +85,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ed28001e39902043bdd50227cd5ef90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallAcceleration: 0.5
+  collectableNotifier: {fileID: 0}
+  PointValue: 1
+  FallAcceleration: 0.5
 --- !u!212 &212000012530123148
 SpriteRenderer:
   m_ObjectHideFlags: 1

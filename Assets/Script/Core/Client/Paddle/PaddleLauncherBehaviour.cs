@@ -2,21 +2,23 @@
 
 namespace mUnityFramework.Game.Pong {
 	public class PaddleLauncherBehaviour : PaddleBehaviour {
-        public PowerMeter powerMeter;
-        public bool isServing = true;
+		public PowerMeter powerMeter;
+		public bool isServing = true;
 
 		private Ball ball = null;
 		private int state = 0;
 
-        private System.Func<float> LaunchPower () {
-			if (Input.GetKeyUp(KeyCode.Space)) {
-                return () => { return powerMeter.Level; };
-            } else if (Input.GetKey(KeyCode.Space)) {
+		private System.Func<float> LaunchPower () {
+			if (Input.GetKeyUp(KeyCode.Space)) { // todo: restrict move!!!
+				return () => { 
+					return powerMeter.Level; 
+				};
+			} else if (Input.GetKey(KeyCode.Space)) {
 				powerMeter.Level += 1.0f * Time.deltaTime;
-                return null;
-            } else {
-                return null;
-            }
+				return null;
+			} else {
+				return null;
+			}
 		}
 
 		private bool IsOutOfBounds (float xPos) {
@@ -27,8 +29,11 @@ namespace mUnityFramework.Game.Pong {
 		private bool Launch (Ball b, Vector3 lForce) {
 			if (! IsOutOfBounds (transform.position.x)) {
 				b.transform.SetParent (DynamicGameObjectSceneManager.Container);
+
 				b.Rb.isKinematic = false;
+
 				b.Force.SetVelocityTo(lForce);
+
 				b.Tr.Clear();
 				b.Tr.enabled = true;
 
@@ -73,10 +78,10 @@ namespace mUnityFramework.Game.Pong {
 						}
 
 						if (state == 2) {
-                            System.Func<float> launchPower = LaunchPower();
-                            if (launchPower != null) {
-                                float power = launchPower();
-                                bool hasServed = Launch (
+							System.Func<float> onLaunchGetPowerReading = LaunchPower();
+							if (onLaunchGetPowerReading != null) {
+								float power = onLaunchGetPowerReading();
+								bool hasServed = Launch (
 									ball, 
 									DeriveLaunchForce (ball, power)
 								);
@@ -84,9 +89,9 @@ namespace mUnityFramework.Game.Pong {
 								if (hasServed) {
 									state = 0;
 									isServing = false;
-                                    powerMeter.Level = 0f;
+									powerMeter.Level = 0f;
 									paddle.PaddleState = Paddle.State.Play;
-                                }
+								}
 							} 
 						}
 					} else {

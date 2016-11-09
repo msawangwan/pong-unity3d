@@ -10,6 +10,10 @@ namespace mUnityFramework.Game {
             Continue,
         }
 
+		public static System.Action<string> info = msg => Debug.LogFormat (
+			"[info][GameController][{0}]", msg
+		);
+
         private static List<GameController> instances = new List<GameController>();
 
         public static GameController Instance {
@@ -19,7 +23,7 @@ namespace mUnityFramework.Game {
         }
 
         public Paddle p;
-        public int step = -10;
+        public int step = 0;
 
         private float ttl = 2.0f;
         private float timestamp = 0;
@@ -44,7 +48,9 @@ namespace mUnityFramework.Game {
         private void Update () {
             switch (ControllerState) {
                 case GameController.State.Block:
-                    if (step == -10) {
+                    if (step == 0) {
+                        p.PaddleStatus = Paddle.Status.Enabled;
+
                         if (countdown == null) {
                             countdown = CountDown.New();
                             countdown.Begin(
@@ -53,10 +59,11 @@ namespace mUnityFramework.Game {
                                 }
                             );
                         }
-                        step = -5;
+
+                        step++;
                     }
 
-                    if (step == -5) {
+                    if (step == 1) {
                         if (canContinue) {
                             step = 0;
                             ControllerState = GameController.State.Continue;
@@ -67,11 +74,11 @@ namespace mUnityFramework.Game {
                 case GameController.State.Continue:
                     if (step == 0) {
                         p.PaddleState = Paddle.State.Serve;
-                        step = 5;
+                        step++;
                         return;
                     }
 
-                    if (step == 5) {
+                    if (step == 1) {
                         return;
                     }
 
