@@ -1,26 +1,16 @@
 ﻿using UnityEngine;
 using mUnityFramework.Game.Pong;
-using System.Collections.Generic;
 
 namespace mUnityFramework.Game {
-    public class GameController : MonoBehaviour {
+    public class GameController : ControllerBehaviour<GameController> {
         public enum State {
             None = 0,
-            Block,
-            Continue,
+            Enter,
+            Execute,
+            Exit,
         }
 
-		public static System.Action<string> info = msg => Debug.LogFormat (
-			"[info][GameController][{0}]", msg
-		);
-
-        private static List<GameController> instances = new List<GameController>();
-
-        public static GameController Instance {
-            get {
-                return instances[0];
-            }
-        }
+        public ScoreboardModelView scoreboardModelView = null;
 
         public Paddle p;
         public int step = 0;
@@ -31,23 +21,33 @@ namespace mUnityFramework.Game {
         private CountDown countdown = null;
         private bool canContinue = false;
 
+        private Score score = null;
+
         public GameController.State ControllerState { get; private set; }
 
-        private void Awake () {
-            if (instances.Count > 0) {
-                instances[0] = this;
-            } else {
-                instances.Add(this);
+        private void HandleOnCollectableNotifierNotify (int pointValue) {
+            int pointsCountedSoFar = 1;
+            while (pointsCountedSoFar < pointValue + 1 ) {
+                score = score.IncrementByOne();
+                pointsCountedSoFar += 1;
             }
+            scoreboardModelView.WriteScore(score.Total);
         }
 
         private void Start () {
-            ControllerState = GameController.State.Block;
+            ControllerState = GameController.State.Enter;
+            score = Score.New();
+
+            if (! scoreboardModelView) {
+                scoreboardModelView = ScoreboardModelView.Instance;
+            }
+
+            CollectableNotifier.RaisedOnCollectableCollected += HandleOnCollectableNotifierNotify;
         }
 
         private void Update () {
             switch (ControllerState) {
-                case GameController.State.Block:
+                case GameController.State.Enter:
                     if (step == 0) {
                         p.PaddleStatus = Paddle.Status.Enabled;
 
@@ -66,12 +66,12 @@ namespace mUnityFramework.Game {
                     if (step == 1) {
                         if (canContinue) {
                             step = 0;
-                            ControllerState = GameController.State.Continue;
+                            ControllerState = GameController.State.Execute;
                         }
                     }
 
                     return;
-                case GameController.State.Continue:
+                case GameController.State.Execute:
                     if (step == 0) {
                         p.PaddleState = Paddle.State.Serve;
                         step++;
@@ -82,6 +82,8 @@ namespace mUnityFramework.Game {
                         return;
                     }
 
+                    return;
+                case GameController.State.Exit:
                     return;
                 default:
                     return;

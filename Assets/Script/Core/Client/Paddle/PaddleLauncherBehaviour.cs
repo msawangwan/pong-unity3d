@@ -44,8 +44,8 @@ namespace mUnityFramework.Game.Pong {
 			return false;
 		}
 
-		private Vector3 DeriveLaunchForce (Ball ball, float multiplierPercentage = 0.0f, float steepness = 0.0f) {
-			return new Vector3 (
+		private Vector3 DeriveLaunchForce (Ball ball, float multiplierPercentage, float steepness = 0.0f) {
+            return new Vector3 (
 				rb.velocity.x * (
 					paddle.Property.LaunchPowerScalar + (
 						paddle.Property.LaunchMaximumMultiplier * Mathf.Clamp01 (
@@ -81,7 +81,7 @@ namespace mUnityFramework.Game.Pong {
 							System.Func<float> onLaunchGetPowerReading = LaunchPower();
 							if (onLaunchGetPowerReading != null) {
 								float power = onLaunchGetPowerReading();
-								bool hasServed = Launch (
+                                bool hasServed = Launch (
 									ball, 
 									DeriveLaunchForce (ball, power)
 								);

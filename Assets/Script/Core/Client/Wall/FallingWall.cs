@@ -40,9 +40,9 @@ namespace mUnityFramework.Game.Pong {
             }
 
             switch (gc.ControllerState) {
-                case GameController.State.Block:
+                case GameController.State.Enter:
                     return;
-                case GameController.State.Continue:
+                case GameController.State.Execute:
                     rb.AddForce (new Vector3 (0, downForce, 0));
                     return;
                 default:

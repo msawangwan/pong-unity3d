@@ -2,10 +2,7 @@
 
 namespace mUnityFramework.Game.Pong {
     public class CoinFaller : DynamicCollectable {
-        public int PointValue = 1;
         public float FallAcceleration = 0.5f;
-
-        protected override int collectablePointValue { get { return PointValue; } }
 
         private Vector3 fallForce {
             get {

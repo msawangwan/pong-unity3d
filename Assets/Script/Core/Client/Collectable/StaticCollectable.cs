@@ -6,12 +6,16 @@ namespace mUnityFramework.Game.Pong {
         protected override bool collectsOnBall      { get { return willCollectOnBall; } }
         protected override bool collectsOnWall      { get { return willCollectOnWall; } }
 
-        protected override int pointValue           { get { return collectablePointValue; } }
-
         protected virtual bool willCollectOnPaddle  { get { return false; } }
         protected virtual bool willCollectOnBall    { get { return true; } }
         protected virtual bool willCollectOnWall    { get { return true; } }
 
-        protected abstract int collectablePointValue { get; }
+        protected override bool pointsOnPaddle    { get { return earnPointsOnPaddle; } }
+        protected override bool pointsOnBall      { get { return earnPointsOnBall; } }
+        protected override bool pointsOnWall      { get { return earnPointsOnWall; } }
+
+        protected virtual bool earnPointsOnPaddle  { get { return false; } }
+        protected virtual bool earnPointsOnBall    { get { return true; } }
+        protected virtual bool earnPointsOnWall    { get { return false; } }
     }
 }

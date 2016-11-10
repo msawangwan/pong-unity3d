@@ -29,6 +29,7 @@ public class CountDown : MonoBehaviour {
     private void Update () {
         if (cc == null) {
             cc = CanvasController.Instance;
+            return;
         }
 
         if (state == 0) {

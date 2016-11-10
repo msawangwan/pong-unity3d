@@ -1,15 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Player : MonoBehaviour {
+namespace mUnityFramework.Game {
+	public class Player : MonoBehaviour {
+		public Score CurrentScore = null;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+		public static Player New () {
+			return new GameObject("player").AddComponent<Player>();
+		}
 	}
 }

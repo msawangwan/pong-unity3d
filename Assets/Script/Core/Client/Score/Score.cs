@@ -17,16 +17,22 @@ namespace mUnityFramework.Game {
 
 		private List<Score.Point> total = new List<Score.Point>();
 
-		public IEnumerable<Score.Point> Total {
-			get {
-				return total;
-			}
-		}
-
-		public int RunningTotal {
+		public int Total {
 			get {
 				return total.Count;
 			}
 		}
+
+		private Score () { }
+
+		public static Score New () {
+            return new Score();
+        }
+
+		public Score IncrementByOne () {
+            Score.Point point = Score.Point.Earned();
+            total.Add(point);
+            return this;
+        }
 	}
 }

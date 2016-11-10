@@ -2,15 +2,15 @@
 
 namespace mUnityFramework.Game.Pong {
     public class PaddleProperty : MonoBehaviour {
-        [SerializeField] private float horizontalPosition = 0.0f;
+        [SerializeField] private float horizontalPosition;
 
-        [SerializeField] private float horizontalMoveForceMultiplier = 1.0f;
-        [SerializeField] private float maximumAttainableMoveForce = 10.0f;
+        [SerializeField] private float horizontalMoveForceMultiplier;
+        [SerializeField] private float maximumAttainableMoveForce;
 
-        [SerializeField] private float launchPowerScalar = 1.0f;
-        [SerializeField] private float launchSteepness = 2.0f;
-        [SerializeField] private float launchMaximumMultiplier = 0.0f;
-        [SerializeField] private float launchOffset = 0.3f;
+        [SerializeField] private float launchPowerScalar;
+        [SerializeField] private float launchSteepness;
+        [SerializeField] private float launchMaximumMultiplier;
+        [SerializeField] private float launchOffset;
 
         public float hPosition { 
             get {
