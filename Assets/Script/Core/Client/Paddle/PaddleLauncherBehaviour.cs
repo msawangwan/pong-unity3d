@@ -45,18 +45,24 @@ namespace mUnityFramework.Game.Pong {
 		}
 
 		private Vector3 DeriveLaunchForce (Ball ball, float multiplierPercentage, float steepness = 0.0f) {
-            return new Vector3 (
-				rb.velocity.x * (
-					paddle.Property.LaunchPowerScalar + (
-						paddle.Property.LaunchMaximumMultiplier * Mathf.Clamp01 (
-							multiplierPercentage
-							)
-						)
-					), 
+            // return new Vector3 (
+			// 	rb.velocity.x * (
+			// 		paddle.Property.LaunchPowerScalar + (
+			// 			paddle.Property.LaunchMaximumMultiplier * Mathf.Clamp01 (
+			// 				multiplierPercentage
+			// 				)
+			// 			)
+			// 		), 
+			// 	paddle.Property.LaunchSteepness,
+			// 	0f
+			// ) * ball.Rb.mass;
+            Vector3 lf = new Vector3 (
+				rb.velocity.x, 
 				paddle.Property.LaunchSteepness,
 				0f
-			) * ball.Rb.mass;
-		}
+			);
+            return lf.normalized * ball.Rb.mass * multiplierPercentage;
+        }
 
 		public void LaunchUpdate () {
 			switch (paddle.PaddleState) {
