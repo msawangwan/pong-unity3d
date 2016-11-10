@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 
 namespace mUnityFramework.UI.Animation {
 	public class TextBulge : MonoBehaviour {

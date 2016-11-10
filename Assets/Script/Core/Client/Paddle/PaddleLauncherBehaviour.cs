@@ -9,12 +9,12 @@ namespace mUnityFramework.Game.Pong {
 		private int state = 0;
 
 		private System.Func<float> LaunchPower () {
-			if (Input.GetKeyUp(KeyCode.Space)) { // todo: restrict move!!!
+			if (Input.GetKeyUp (KeyCode.Space)) { // todo: restrict move!!!
 				return () => { 
-					return powerMeter.Level; 
+					return powerMeter.Level;
 				};
-			} else if (Input.GetKey(KeyCode.Space)) {
-				powerMeter.Level += 1.0f * Time.deltaTime;
+			} else if (Input.GetKey (KeyCode.Space)) {
+				powerMeter.Accumulate ();
 				return null;
 			} else {
 				return null;
@@ -32,37 +32,28 @@ namespace mUnityFramework.Game.Pong {
 
 				b.Rb.isKinematic = false;
 
-				b.Force.SetVelocityTo(lForce);
+				b.Force.SetVelocityTo (lForce);
 
-				b.Tr.Clear();
+				b.Tr.Clear ();
 				b.Tr.enabled = true;
 
-				Debug.DrawRay(transform.position, lForce, Color.cyan, 5.0f);
+				Debug.DrawRay (transform.position, lForce, Color.cyan, 5.0f);
 
 				return true;
+			} else {
+				powerMeter.Zero ();
+
+				return false;
 			}
-			return false;
 		}
 
 		private Vector3 DeriveLaunchForce (Ball ball, float multiplierPercentage, float steepness = 0.0f) {
-            // return new Vector3 (
-			// 	rb.velocity.x * (
-			// 		paddle.Property.LaunchPowerScalar + (
-			// 			paddle.Property.LaunchMaximumMultiplier * Mathf.Clamp01 (
-			// 				multiplierPercentage
-			// 				)
-			// 			)
-			// 		), 
-			// 	paddle.Property.LaunchSteepness,
-			// 	0f
-			// ) * ball.Rb.mass;
-            Vector3 lf = new Vector3 (
+			return new Vector3 (
 				rb.velocity.x, 
 				paddle.Property.LaunchSteepness,
 				0f
-			);
-            return lf.normalized * ball.Rb.mass * multiplierPercentage;
-        }
+			).normalized * ball.Rb.mass * multiplierPercentage; // include paddle.Property.LaunchMaximumMultiplier and paddle.Property.LaunchPowerScalar
+		}
 
 		public void LaunchUpdate () {
 			switch (paddle.PaddleState) {
@@ -86,8 +77,9 @@ namespace mUnityFramework.Game.Pong {
 						if (state == 2) {
 							System.Func<float> onLaunchGetPowerReading = LaunchPower();
 							if (onLaunchGetPowerReading != null) {
-								float power = onLaunchGetPowerReading();
-                                bool hasServed = Launch (
+								float power = onLaunchGetPowerReading ();
+
+								bool hasServed = Launch (
 									ball, 
 									DeriveLaunchForce (ball, power)
 								);
@@ -95,7 +87,7 @@ namespace mUnityFramework.Game.Pong {
 								if (hasServed) {
 									state = 0;
 									isServing = false;
-									powerMeter.Level = 0f;
+									powerMeter.Zero ();
 									paddle.PaddleState = Paddle.State.Play;
 								}
 							} 

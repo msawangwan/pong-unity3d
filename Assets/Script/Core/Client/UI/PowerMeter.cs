@@ -2,21 +2,27 @@
 using UnityEngine.UI;
 
 public class PowerMeter : MonoBehaviour {
-	private Slider slider = null;
-
-	public float Level {
-		get {
-			if (! slider) {
-                slider = GetComponent<Slider>();
+    private Slider cachedSlider = null;
+    private Slider slider {
+        get {
+            if (! cachedSlider) {
+                cachedSlider = GetComponent<Slider>();
             }
+            return cachedSlider;
+        }
+    }
+
+    public float Level {
+        get {
             return slider.value;
         }
+    }
 
-		set {
-			if (! slider) {
-                slider = GetComponent<Slider>();
-            }
-            slider.value = value;
-        }
-	}
+    public void Zero () {
+        slider.value = 0.0f;
+    }
+
+    public void Accumulate () {
+        slider.value += 1.0f * Time.deltaTime;
+    }
 }
