@@ -9,10 +9,6 @@ namespace mUnityFramework.Game.Pong {
 	public class Ball : MonoBehaviour {
 		public const int ballLayer = 22;
 
-		[SerializeField] private Transform ballContainerTransform = null;
-
-		private System.Action<string> info = msg => Debug.LogFormat("[info][ball][{0}]", msg);
-
 		private BallProperty            cachedProperty = null;
 		private BallControllerBehaviour cachedController = null;
 		private BallForceBehaviour      cachedForce = null;

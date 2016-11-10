@@ -15,9 +15,6 @@ namespace mUnityFramework.Game {
         public Paddle p;
         public int step = 0;
 
-        private float ttl = 2.0f;
-        private float timestamp = 0;
-
         private CountDown countdown = null;
         private bool canContinue = false;
 
